@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <title>Editar Cadastro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <nav id="sidebar" class="sidebar" aria-label="Menu principal">
+      <div class="sidebar-header">
+        <h4>Painel IFCE</h4>
+      </div>
+      <ul class="nav flex-column">
+        <li><a href="{{ url_for('cad_inserir') }}"><i class="fa-solid fa-user-plus"></i><span>Cadastro de Aluno/Professor</span></a></li>
+        <li><a href="{{ url_for('lista') }}"><i class="fa-solid fa-users"></i><span>Usuários cadastrados</span></a></li>
+        <li><a href="#"><i class="fa-solid fa-file-export"></i><span>Extrair dados</span></a></li>
+        <li><a href="#"><i class="fa-solid fa-chart-line"></i><span>Cadastro de análises</span></a></li>
+      </ul>
+      <div class="logout">
+        <a href="/login" class="text-center py-3 d-block">
+          <i class="fa-solid fa-sign-out-alt"></i> <span>Sair</span>
+        </a>
+      </div>
+    </nav>
+
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="main-content">
+      <button class="menu-toggle" onclick="toggleSidebar()" aria-expanded="false" aria-controls="sidebar">
+        <i class="fa-solid fa-bars"></i>
+        <span class="sr-only">Abrir/fechar menu</span>
+      </button>
+
+      <div class="container-fluid">
+        <h1 class="mb-4">Editar Cadastro</h1>
+
+        <form action="{{ url_for('update', id=cadastro.id) }}" method="POST">
+          <label for="nome">Nome:</label>
+          <input type="text" name="nome" value="{{ cadastro.nome }}" required>
+
+          <label for="email">E-mail:</label>
+          <input type="email" name="email" value="{{ cadastro.email }}" required>
+
+          <label for="telefone">Telefone:</label>
+          <input type="text" name="telefone" value="{{ cadastro.telefone }}" required>
+
+          <label for="data_nascimento">Data de Nascimento:</label>
+          <input type="date" name="data_nascimento" value="{{ cadastro.data_nascimento }}" required>
+
+          <label for="login">Login:</label>
+          <input type="text" name="login" value="{{ cadastro.login }}" required>
+
+          <label for="senha">Senha:</label>
+          <input type="password" name="senha" value="{{ cadastro.senha }}" required>
+
+          <label for="tipo">Tipo:</label>
+          <select name="tipo" required>
+            <option value="aluno" {% if cadastro.tipo == "aluno" %}selected{% endif %}>Aluno</option>
+            <option value="professor" {% if cadastro.tipo == "professor" %}selected{% endif %}>Professor</option>
+          </select>
+
+          <label for="ativo">Status:</label>
+          <select name="ativo" id="ativo" required>
+            <option value="Ativo" {% if cadastro.ativo == 'Ativo' %}selected{% endif %}>Ativo</option>
+            <option value="Inativo" {% if cadastro.ativo == 'Inativo' %}selected{% endif %}>Inativo</option>
+          </select>
+
+          <button type="submit">Salvar Alterações</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../static/js/navbar.js"></script>
+</body>
+</html>

@@ -9,15 +9,14 @@
   <link rel="stylesheet" href="../../static/css/style.css">
 </head>
 <body>
-
   <div class="wrapper">
     <nav id="sidebar" class="sidebar" aria-label="Menu principal">
       <div class="sidebar-header">
         <h4>Painel IFCE</h4>
       </div>
       <ul class="nav flex-column">
-        <li><a href="#"><i class="fa-solid fa-user-plus"></i><span>Cadastro de Aluno/Professor</span></a></li>
-        <li><a href="#"><i class="fa-solid fa-users"></i><span>Usuários cadastrados</span></a></li>
+        <li><a href="{{ url_for('cad_inserir') }}"><i class="fa-solid fa-user-plus"></i><span>Cadastro de Aluno/Professor</span></a></li>
+        <li><a href="{{ url_for('lista') }}"><i class="fa-solid fa-users"></i><span>Usuários cadastrados</span></a></li>
         <li><a href="#"><i class="fa-solid fa-file-export"></i><span>Extrair dados</span></a></li>
         <li><a href="#"><i class="fa-solid fa-chart-line"></i><span>Cadastro de análises</span></a></li>
       </ul>
