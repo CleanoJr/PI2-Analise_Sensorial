@@ -1,5 +1,5 @@
 from main import app
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, flash
 from models.usuario_model import *
 from models.conexao import *
 from datetime import datetime  # Para converter a data corretamente
@@ -57,6 +57,7 @@ def create():
         db.commit()
 
         # Redireciona para a página de lista de cadastros
+        flash("Usuario cadastrado com sucesso!", "success")
         return redirect(url_for('lista'))
 
 # Rota para exibir a lista de cadastros
@@ -98,4 +99,5 @@ def update(id):
         db.commit()
     db.close()
 
+    flash("Usuario atualizado com sucesso!", "success")
     return redirect(url_for('lista'))
