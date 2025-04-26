@@ -17,12 +17,12 @@ def admin():
     return render_template("/professor/painel_admin.html")
 
 # Rota para exibir o formulário
-@app.route("/cadastro/inserir", methods=['GET'])
+@app.route("usuario/cadastro/inserir", methods=['GET'])
 def cad_inserir():
     return render_template("/cadastro/aluno_professor.html")
 
 # Rota para processar o formulário
-@app.route("/cadastro/create", methods=['POST'])
+@app.route("usuario/cadastro/inserir/create", methods=['POST'])
 def create():
     if request.method == 'POST':
         # Captura os dados enviados pelo formulário
@@ -61,7 +61,7 @@ def create():
         return redirect(url_for('lista'))
 
 # Rota para exibir a lista de cadastros
-@app.route("/list")
+@app.route("usuario/cadastro/inserir/list")
 def lista():
     # Cria uma nova sessão para o banco de dados
     db = SessionLocal()
@@ -73,7 +73,7 @@ def lista():
     return render_template("/usuario/list_usuario.html", cadastros=cadastros)
 
 # Rota para exibir o formulário de edição
-@app.route("/cadastro/editar/<int:id>", methods=["GET"])
+@app.route("usuario/cadastro/inserir/editar/<int:id>", methods=["GET"])
 def editar(id):
     db = SessionLocal()
     cadastro = db.query(Usuario).filter(Usuario.id == id).first()
@@ -81,7 +81,7 @@ def editar(id):
     return render_template("usuario/edit_usuario.html", cadastro=cadastro)
 
 # Rota para processar a atualização
-@app.route("/cadastro/update/<int:id>", methods=["POST"])
+@app.route("usuario/cadastro/inserir/update/<int:id>", methods=["POST"])
 def update(id):
     db = SessionLocal()
     cadastro = db.query(Usuario).filter(Usuario.id == id).first()
