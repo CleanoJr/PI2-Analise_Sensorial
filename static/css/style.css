@@ -197,7 +197,7 @@ form select {
 }
 
 form button {
-  background-color: #007bff;
+  background-color: green ;
   color: white;
   padding: 12px;
   border: none;
@@ -207,7 +207,7 @@ form button {
 }
 
 form button:hover {
-  background-color: #0056b3;
+  background-color: green ;
 }
 
 /* Responsividade */
