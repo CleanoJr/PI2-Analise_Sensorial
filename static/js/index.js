@@ -1,15 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 9000;
 
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
 
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("API do Museu");
+app.get('/hello_word', (req, res) => {
+  res.send('Testando');
 });
 
 app.use("/usuarios", usuarioRoutes);
