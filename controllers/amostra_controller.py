@@ -7,6 +7,19 @@ from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Rota para exibir detalhes de uma análise
+@app.route("/analise/<int:id>/detalhes", methods=['GET'])
+def detalhe_analise(id):
+    db = SessionLocal()
+    analise = db.query(Analise).filter_by(id=id).first()
+    if not analise:
+        db.close()
+        flash("Análise não encontrada!", "error")
+        return redirect(url_for('lista_analises'))
+    amostras = analise.amostras
+    db.close()
+    return render_template("/analises/detalhe_analise.html", analise=analise, amostras=amostras)
+
 # Rota para listar amostras de uma análise
 @app.route("/analise/<int:id>/amostras", methods=['GET'])
 def lista_amostras(id):
@@ -33,7 +46,7 @@ def nova_amostra(id):
         flash("Amostra criada com sucesso!", "success")
         return redirect(url_for('detalhes_analise', id=id))
 
-    return render_template("nova_amostra.html", analise_id=id)
+    return render_template("analises/amostra/nova_amostra.html", analise_id=id)
 
 # Rota para editar amostra
 @app.route("/analise/<int:id>/amostra/editar/<int:amostra_id>", methods=['GET', 'POST'])
@@ -43,14 +56,14 @@ def editar_amostra(id, amostra_id):
     if not amostra:
         db.close()
         flash("Amostra não encontrada!", "error")
-        return redirect(url_for('detalhes_analise', id=id))
+        return redirect(url_for('detalhe_analise', id=id))
 
     if request.method == 'POST':
         amostra.descricao = request.form['descricao']
         db.commit()
         db.close()
         flash("Amostra atualizada com sucesso!", "success")
-        return redirect(url_for('detalhes_analise', id=id))
+        return redirect(url_for('detalhe_analise', id=id))
 
     db.close()
     return render_template("editar_amostra.html", amostra=amostra, analise_id=id)
@@ -63,10 +76,10 @@ def apagar_amostra(id, amostra_id):
     if not amostra:
         db.close()
         flash("Amostra não encontrada!", "error")
-        return redirect(url_for('detalhes_analise', id=id))
+        return redirect(url_for('detalhe_analise', id=id))
 
     db.delete(amostra)
     db.commit()
     db.close()
     flash("Amostra apagada com sucesso!", "success")
-    return redirect(url_for('detalhes_analise', id=id))
+    return redirect(url_for('detalhe_analise', id=id))
