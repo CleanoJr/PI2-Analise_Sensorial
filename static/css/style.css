@@ -69,6 +69,12 @@ button:focus-visible {
   background-color: var(--primary-hover);
 }
 
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+
 .sidebar i {
   width: 24px;
   text-align: center;
@@ -133,7 +139,8 @@ button:focus-visible {
   left: 20px;
   z-index: 1050;
   display: none;
-  transition: transform 0.3s ease-in-out; /* Mesma transição da sidebar */
+  transition: all 0.3s ease;
+  /* transition: transform 0.3s ease-in-out; Mesma transição da sidebar */
 }
 
 .menu-toggle i {

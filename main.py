@@ -13,4 +13,4 @@ from controllers.amostra_controller import *
 
 #Inicia o servidor de desenvolvimento.
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
