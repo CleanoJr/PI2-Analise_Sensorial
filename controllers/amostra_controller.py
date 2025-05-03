@@ -48,38 +48,48 @@ def nova_amostra(id):
 
     return render_template("analises/amostra/nova_amostra.html", analise_id=id)
 
-# Rota para editar amostra
-@app.route("/analise/<int:id>/amostra/editar/<int:amostra_id>", methods=['GET', 'POST'])
+# Rota para exibir formulário de edição de amostra
+@app.route("/analise/<int:id>/amostra/<int:amostra_id>/editar", methods=['GET'])
+def form_editar_amostra(id, amostra_id):
+    db = SessionLocal()
+    amostra = db.query(Amostra).filter_by(id=amostra_id, analise_id=id).first()
+    if not amostra:
+        db.close()
+        flash("Amostra não encontrada!", "error")
+        return redirect(url_for('detalhes_analise', id=id))
+    db.close()
+    return render_template("analises/amostra/edit_amostra.html", amostra=amostra, analise_id=id)
+
+# Rota para atualizar uma amostra
+@app.route("/analise/<int:id>/amostra/<int:amostra_id>/editar", methods=['POST'])
 def editar_amostra(id, amostra_id):
     db = SessionLocal()
     amostra = db.query(Amostra).filter_by(id=amostra_id, analise_id=id).first()
     if not amostra:
         db.close()
         flash("Amostra não encontrada!", "error")
-        return redirect(url_for('detalhe_analise', id=id))
+        return redirect(url_for('detalhes_analise', id=id))
 
-    if request.method == 'POST':
-        amostra.descricao = request.form['descricao']
-        db.commit()
-        db.close()
-        flash("Amostra atualizada com sucesso!", "success")
-        return redirect(url_for('detalhe_analise', id=id))
-
+    amostra.descricao = request.form['descricao']
+    db.commit()
     db.close()
-    return render_template("editar_amostra.html", amostra=amostra, analise_id=id)
 
-# Rota para apagar amostra
-@app.route("/analise/<int:id>/amostra/apagar/<int:amostra_id>", methods=['GET'])
-def apagar_amostra(id, amostra_id):
+    flash("Amostra atualizada com sucesso!", "success")
+    return redirect(url_for('detalhes_analise', id=id))
+
+# Rota para excluir uma amostra
+@app.route("/analise/<int:id>/amostra/<int:amostra_id>/excluir", methods=['GET'])
+def excluir_amostra(id, amostra_id):
     db = SessionLocal()
     amostra = db.query(Amostra).filter_by(id=amostra_id, analise_id=id).first()
     if not amostra:
         db.close()
         flash("Amostra não encontrada!", "error")
-        return redirect(url_for('detalhe_analise', id=id))
+        return redirect(url_for('detalhes_analise', id=id))
 
     db.delete(amostra)
     db.commit()
     db.close()
-    flash("Amostra apagada com sucesso!", "success")
-    return redirect(url_for('detalhe_analise', id=id))
+
+    flash("Amostra excluída com sucesso!", "success")
+    return redirect(url_for('detalhes_analise', id=id))

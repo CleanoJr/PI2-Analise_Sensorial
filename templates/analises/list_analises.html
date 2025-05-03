@@ -75,7 +75,7 @@
 
       <div class="container-fluid">
         <h1 class="mb-4">Análises</h1>
-        <a href="{{ url_for('form_analise') }}" class="btn btn-primary mb-3">Nova Análise</a>
+        <a href="{{ url_for('form_analise') }}" class="btn btn-success mb-3">Nova Análise</a>
 
         <h3>Lista de Análises:</h3>
         <div class="table-responsive custom-table">
@@ -107,8 +107,11 @@
                     <a href="{{ url_for('detalhes_analise', id=analise.id) }}" class="btn btn-sm btn-primary" title="Detalhes">
                       <i class="fa-solid fa-eye"></i>
                     </a>
-                    <a href="{{ url_for('lista_amostras', id=analise.id) }}" class="btn btn-sm btn-info" title="Amostras">
-                      <i class="fa-solid fa-vial"></i>
+                    <a href="{{ url_for('form_editar_analise', id=analise.id) }}" class="btn btn-sm btn-warning" title="Editar">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <a href="{{ url_for('excluir_analise', id=analise.id) }}" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este cadastro?');">
+                      <i class="fa-solid fa-trash"></i>
                     </a>
                   </div>
                 </td>

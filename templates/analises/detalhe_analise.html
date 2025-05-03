@@ -14,8 +14,6 @@
   <div class="wrapper">
     {% include 'includes/menu_lateral.html' %}
 
-  
-
     <div class="main-content">
       <button class="menu-toggle" onclick="toggleSidebar()" aria-expanded="false" aria-controls="sidebar">
         <i class="fa-solid fa-bars"></i>
@@ -27,19 +25,33 @@
 
         <div class="details-section mb-4">
           <h2>{{ analise.nome }}</h2>
-          <p><strong>Responsável:</strong> {{ analise.responsavel }}</p>
-          <p><strong>Data:</strong> {{ analise.data }}</p>
-          <p><strong>Status:</strong> {{ analise.status }}</p>
-          <p><strong>Tipo de Avaliação:</strong> {{ analise.tipo_avaliacao }}</p>
-          <p><strong>Intenção de Compra:</strong> {{ analise.intencao_compra }}</p>
-          {% if analise.justificativa %}
-            <p><strong>Justificativa:</strong> {{ analise.justificativa }}</p>
-          {% endif %}
+          <div class="row">
+            <div class="col-md-4">
+              <p><strong>Responsável:</strong> {{ analise.responsavel }}</p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Data:</strong> {{ analise.data }}</p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Status:</strong> {{ analise.status }}</p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Tipo de Avaliação:</strong> {{ analise.tipo_avaliacao }}</p>
+            </div>
+            <div class="col-md-4">
+              <p><strong>Intenção de Compra:</strong> {{ analise.intencao_compra }}</p>
+            </div>
+            <div class="col-md-4">
+              {% if analise.justificativa %}
+                <p><strong>Justificativa:</strong> {{ analise.justificativa }}</p>
+              {% endif %}
+            </div>
+          </div>
         </div>
 
         <div class="details-section">
           <h3>Amostras</h3>
-          <a href="{{ url_for('nova_amostra', id=analise.id) }}" class="btn btn-primary mb-3">
+          <a href="{{ url_for('nova_amostra', id=analise.id) }}" class="btn btn-success mb-3">
             <i class="fa-solid fa-plus"></i> Nova Amostra
           </a>
           <div class="table-responsive custom-table">
@@ -61,7 +73,7 @@
                       <a href="{{ url_for('editar_amostra', id=analise.id, amostra_id=amostra.id) }}" class="btn btn-sm btn-warning" title="Editar">
                         <i class="fa-solid fa-edit"></i>
                       </a>
-                      <a href="{{ url_for('apagar_amostra', id=analise.id, amostra_id=amostra.id) }}" class="btn btn-sm btn-danger" title="Apagar" onclick="return confirm('Tem certeza que deseja apagar esta amostra?');">
+                      <a href="{{ url_for('excluir_amostra', id=analise.id, amostra_id=amostra.id) }}" class="btn btn-sm btn-danger" title="Apagar" onclick="return confirm('Tem certeza que deseja apagar esta amostra?');">
                         <i class="fa-solid fa-trash"></i>
                       </a>
                     </div>

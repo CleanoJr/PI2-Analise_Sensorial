@@ -64,3 +64,56 @@ def detalhes_analise(id):
     amostras = analise.amostras
     db.close()
     return render_template("/analises/detalhe_analise.html", analise=analise, amostras=amostras)
+
+# Rota para exibir formulário de edição
+@app.route("/analise/<int:id>/editar", methods=['GET'])
+def form_editar_analise(id):
+    db = SessionLocal()
+    analise = db.query(Analise).filter_by(id=id).first()
+    if not analise:
+        db.close()
+        flash("Análise não encontrada!", "error")
+        return redirect(url_for('lista_analises'))
+    db.close()
+    return render_template("/analises/edit_analise.html", analise=analise)
+
+# Rota para atualizar uma análise
+@app.route("/analise/<int:id>/editar", methods=['POST'])
+def editar_analise(id):
+    db = SessionLocal()
+    analise = db.query(Analise).filter_by(id=id).first()
+    if not analise:
+        db.close()
+        flash("Análise não encontrada!", "error")
+        return redirect(url_for('lista_analises'))
+
+    analise.nome = request.form['nome']
+    analise.responsavel = request.form['responsavel']
+    analise.data = request.form['data']
+    analise.status = request.form['status']
+    analise.tipo_avaliacao = request.form['tipo']
+    analise.intencao_compra = request.form['intencao']
+    analise.justificativa = request.form['justificativa']
+
+    db.commit()
+    db.close()
+
+    flash("Análise atualizada com sucesso!", "success")
+    return redirect(url_for('lista_analises'))
+
+# Rota para excluir uma análise
+@app.route("/analise/<int:id>/excluir", methods=['GET'])
+def excluir_analise(id):
+    db = SessionLocal()
+    analise = db.query(Analise).filter_by(id=id).first()
+    if not analise:
+        db.close()
+        flash("Análise não encontrada!", "error")
+        return redirect(url_for('lista_analises'))
+
+    db.delete(analise)
+    db.commit()
+    db.close()
+
+    flash("Análise excluída com sucesso!", "success")
+    return redirect(url_for('lista_analises'))
