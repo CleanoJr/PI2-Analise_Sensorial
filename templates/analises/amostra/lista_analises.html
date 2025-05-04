@@ -71,6 +71,13 @@ $result = $stmt->get_result();
   </style>
 </head>
 <body>
+  {% include 'includes/menu_lateral.html' %}
+
+  <div class="main-content">
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-expanded="false" aria-controls="sidebar">
+      <i class="fa-solid fa-bars"></i>
+      <span class="sr-only">Abrir/fechar menu</span>
+    </button>
 
   <h1>Análises Ativas</h1>
 
