@@ -40,8 +40,10 @@
       </button>
 
       <div class="container-fluid">
-        <h1 class="mb-4">Editar Cadastro</h1>
-
+        <header>
+          <h1>Editar cadastro</h1>
+        </header>
+        
         <form action="{{ url_for('update', id=cadastro.id) }}" method="POST">
           <label for="nome">Nome:</label>
           <input type="text" name="nome" value="{{ cadastro.nome }}" required>
