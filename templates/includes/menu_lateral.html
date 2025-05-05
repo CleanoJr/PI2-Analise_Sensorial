@@ -1,29 +1,24 @@
+<nav id="sidebar" class="sidebar" aria-label="Menu principal">
+  <div class="sidebar-header">
+    <h4>Painel IFCE</h4>
+  </div>
+  <ul class="nav flex-column">
+    <li><a href="{{ url_for('cad_inserir') }}"><i class="fa-solid fa-user-plus"></i><span>Cadastrar Usuário</span></a></li>
+    <li><a href="{{ url_for('lista') }}"><i class="fa-solid fa-users"></i><span>Usuários cadastrados</span></a></li>
+    <li><a href="{{ url_for('list_analises') }}"><i class="fa-solid fa-chart-line"></i><span>Cadastro de análises</span></a></li>
+    <li><a href="#"><i class="fa-solid fa-file-export"></i><span>Extrair dados</span></a></li>
+  </ul>
 
-  <nav id="sidebar" class="sidebar" aria-label="Menu principal">
-    <div class="sidebar-header">
-      <h4>Painel IFCE</h4>
-    </div>
-    <ul class="nav flex-column">
-      <li><a href="{{ url_for('cad_inserir') }}"><i class="fa-solid fa-user-plus"></i><span>Cadastro de
-            Aluno/Professor</span></a></li>
-      <li><a href="{{ url_for('lista') }}"><i class="fa-solid fa-users"></i><span>Usuários cadastrados</span></a></li>
-      <li><a href="#"><i class="fa-solid fa-file-export"></i><span>Extrair dados</span></a></li>
-      <li><a href="{{ url_for('lista_analises') }}"><i class="fa-solid fa-chart-line"></i><span>Cadastro de
-            análises</span></a></li>
-    </ul>
-    <div class="logout">
-      <a href="/" class="text-center py-3 d-block">
-        <i class="fa-solid fa-sign-out-alt"></i> <span>Sair</span>
-      </a>
-    </div>
-  </nav>
+  <div class="logout">
+    <a href="/" class="text-center py-3 d-block">
+      <i class="fa-solid fa-sign-out-alt"></i> <span>Sair</span>
+    </a>
+  </div>
+</nav>
 
-  <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
-  
-    <button class="menu-toggle" onclick="toggleSidebar()" aria-expanded="false" aria-controls="sidebar">
-      <i class="fa-solid fa-bars"></i>
-      <span class="sr-only">Abrir/fechar menu</span>
-    </button>
-
-  
+<button class="menu-toggle" onclick="toggleSidebar()" aria-expanded="false" aria-controls="sidebar">
+  <i class="fa-solid fa-bars"></i>
+  <span class="sr-only">Abrir/fechar menu</span>
+</button>
