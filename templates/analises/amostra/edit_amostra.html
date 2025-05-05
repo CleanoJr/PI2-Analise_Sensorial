@@ -22,7 +22,9 @@
       </button>
 
       <div class="container-fluid">
-        <h1 class="mb-4">Editar Amostra para Análise {{ analise_id }}</h1>
+        <header>
+          <h1>Editar Amostra para Análise {{ analise_id }}</h1>
+        </header>
 
         <form action="{{ url_for('editar_amostra', id=analise_id, amostra_id=amostra.id) }}" method="POST">
           <label for="descricao">Descrição:</label>
