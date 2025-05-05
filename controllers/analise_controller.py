@@ -29,7 +29,6 @@ def nova_analise():
         data = request.form['data']
         status = request.form['status']
         tipo_avaliacao = request.form['tipo']
-        intencao_compra = request.form['intencao']
         justificativa = request.form['justificativa']
 
         nova_analise = Analise(
@@ -38,7 +37,6 @@ def nova_analise():
             data=data,
             status=status,
             tipo_avaliacao=tipo_avaliacao,
-            intencao_compra=intencao_compra,
             justificativa=justificativa
         )
 
@@ -92,7 +90,6 @@ def editar_analise(id):
     analise.data = request.form['data']
     analise.status = request.form['status']
     analise.tipo_avaliacao = request.form['tipo']
-    analise.intencao_compra = request.form['intencao']
     analise.justificativa = request.form['justificativa']
 
     db.commit()
