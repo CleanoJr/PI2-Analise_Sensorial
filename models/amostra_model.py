@@ -11,6 +11,3 @@ class Amostra(Base):
     def __init__(self, descricao, analise_id):
         self.descricao = descricao
         self.analise_id = analise_id
-
-# Criando a tabela no banco de dados, caso não exista
-Base.metadata.create_all(bind=engine)

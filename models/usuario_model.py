@@ -1,5 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Date
+from sqlalchemy.orm import relationship
 from models.conexao import Base, engine  # Certifique-se de que a conexão com o banco está correta
+from models.associacoes import analise_usuario
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -14,6 +16,11 @@ class Usuario(Base):
     senha = Column(String(15))
     tipo = Column(String(20))  # Pode ser "aluno" ou "professor"
     ativo = Column(String(10), default="Ativo")  # Mudando para String com valores "Ativo" ou "Inativo"
+    analises = relationship(
+        "Analise",
+        secondary=analise_usuario,
+        back_populates="participantes"
+    )
 
     def __init__(self, nome, email, telefone, data_nascimento, login, senha, tipo, ativo="Ativo"):
         self.nome = nome
@@ -24,7 +31,3 @@ class Usuario(Base):
         self.senha = senha
         self.tipo = tipo
         self.ativo = ativo
-        
-
-# Criando as tabelas no banco de dados, caso não existam
-Base.metadata.create_all(bind=engine)

@@ -11,6 +11,9 @@ from controllers.aluno_controller import *
 from controllers.analise_controller import *
 from controllers.amostra_controller import *
 
+# Cria todas as tabelas no banco de dados
+Base.metadata.create_all(bind=engine)
+
 #Inicia o servidor de desenvolvimento.
 if __name__ == '__main__':
     app.run(debug=True)
