@@ -11,6 +11,9 @@ from controllers.aluno_controller import *
 from controllers.analise_controller import *
 from controllers.amostra_controller import *
 
+from models.testador_modal import *
+from models.avaliacao_modal import *
+
 # Cria todas as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
 
