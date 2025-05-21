@@ -26,19 +26,19 @@ def form_analise():
 @app.route("/analise/nova", methods=['POST'])
 def nova_analise():
     if request.method == 'POST':
-        nome = request.form['nome']
+        produto = request.form['produto']
         responsavel = request.form['responsavel']
         data = request.form['data']
         status = request.form['status']
-        tipo_avaliacao = request.form['tipo']
+        teste = request.form['teste']
         justificativa = request.form['justificativa']
 
         nova_analise = Analise(
-            nome=nome,
+            produto=produto,
             responsavel=responsavel,
             data=data,
             status=status,
-            tipo_avaliacao=tipo_avaliacao,
+            teste=teste,
             justificativa=justificativa
         )
 
@@ -104,11 +104,11 @@ def editar_analise(id):
         flash("Análise não encontrada!", "error")
         return redirect(url_for('lista_analises'))
 
-    analise.nome = request.form['nome']
+    analise.produto = request.form['produto']
     analise.responsavel = request.form['responsavel']
     analise.data = request.form['data']
     analise.status = request.form['status']
-    analise.tipo_avaliacao = request.form['tipo']
+    analise.teste = request.form['teste']
     analise.justificativa = request.form['justificativa']
 
     db.commit()

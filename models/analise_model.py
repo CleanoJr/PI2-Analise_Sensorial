@@ -8,11 +8,11 @@ class Analise(Base):
     __tablename__ = "analises"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nome = Column(String(255), nullable=False)
+    produto = Column(String(255), nullable=False)
     responsavel = Column(String(255), nullable=False)
     data = Column(String(255), nullable=False)
     status = Column(String(255), nullable=False)
-    tipo_avaliacao = Column(String(255), nullable=False)
+    teste = Column(String(255), nullable=False)
     justificativa = Column(String(1000), nullable=True)
     amostras = relationship("Amostra", backref="analise", cascade="all, delete-orphan", lazy=True)
     participantes = relationship(
@@ -21,10 +21,10 @@ class Analise(Base):
         back_populates="analises"
     )
 
-    def __init__(self, nome, responsavel, data, status, tipo_avaliacao, justificativa=None):
-        self.nome = nome
+    def __init__(self, produto, responsavel, data, status, teste, justificativa=None):
+        self.produto = produto
         self.responsavel = responsavel
         self.data = data
         self.status = status
-        self.tipo_avaliacao = tipo_avaliacao
+        self.teste = teste
         self.justificativa = justificativa

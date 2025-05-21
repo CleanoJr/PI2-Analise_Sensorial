@@ -28,8 +28,8 @@
         </header>
 
         <form action="{{ url_for('nova_analise') }}" method="POST">
-          <label for="nome">Nome:</label>
-          <input type="text" name="nome" id="nome" required>
+          <label for="nome">Produto:</label>
+          <input type="text" name="produto" id="produto" required>
 
           <label for="responsavel">Professor Responsável:</label>
           <input type="text" name="responsavel" id="responsavel" required>
@@ -48,8 +48,8 @@
             <option value="Finalizado">Finalizado</option>
           </select>
 
-          <label for="tipo">Tipo de Avaliação:</label>
-          <input type="text" name="tipo" id="tipo" required>
+          <label for="teste">Teste:</label>
+          <input type="text" name="teste" id="teste" required>
 
           <label for="justificativa">Justificativa:</label>
           <textarea name="justificativa" id="justificativa" placeholder="Texto de justificativa"

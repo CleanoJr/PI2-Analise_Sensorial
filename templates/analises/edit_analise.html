@@ -37,8 +37,8 @@
         {% endwith %}
 
         <form action="{{ url_for('editar_analise', id=analise.id) }}" method="POST">
-          <label for="nome">Nome:</label>
-          <input type="text" name="nome" id="nome" value="{{ analise.nome }}" required>
+          <label for="nome">Produto:</label>
+          <input type="text" name="produto" id="produto" value="{{ analise.produto }}" required>
 
           <label for="responsavel">Professor Responsável:</label>
           <input type="text" name="responsavel" id="responsavel" value="{{ analise.responsavel }}" required>
@@ -56,8 +56,8 @@
             <option value="Finalizado" {% if analise.status=='Finalizado' %}selected{% endif %}>Finalizado</option>
           </select>
 
-          <label for="tipo">Tipo de Avaliação:</label>
-          <input type="text" name="tipo" id="tipo" value="{{ analise.tipo_avaliacao }}" required>
+          <label for="teste">Teste:</label>
+          <input type="text" name="teste" id="tste" value="{{ analise.teste }}" required>
 
           <label for="justificativa">Justificativa:</label>
           <textarea name="justificativa" id="justificativa" placeholder="Texto de justificativa"
