@@ -91,7 +91,6 @@
                 <th>Produto</th>
                 <th>Status</th>
                 <th class="d-none d-md-table-cell">Responsável</th>
-                <th class="d-none d-md-table-cell">Grau de escala</th>
                 <th class="d-none d-md-table-cell">Data</th>
                 <th class="d-none d-md-table-cell">Teste</th>
                 <th class="actions">Ações</th>
@@ -103,7 +102,7 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ analise.produto }}</td>
                 <td>{{ analise.status }}</td>
-                <td class="d-none d-md-table-cell">{{ analise.responsavel }}</td>
+                <td class="d-none d-md-table-cell">{{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.data }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.teste }}</td>
                 <td class="actions">

@@ -41,7 +41,14 @@
           <input type="text" name="produto" id="produto" value="{{ analise.produto }}" required>
 
           <label for="responsavel">Professor Responsável:</label>
-          <input type="text" name="responsavel" id="responsavel" value="{{ analise.responsavel }}" required>
+          <select name="responsavel" id="responsavel" class="form-select" required>
+            <option value="" disabled>Selecione um professor</option>
+            {% for professor in professores %}
+              <option value="{{ professor.id }}" {% if professor.id == analise.responsavel_id %}selected{% endif %}>
+                {{ professor.nome }}
+              </option>
+            {% endfor %}
+          </select>
 
           <label for="data">Data:</label>
           <input type="date" name="data" id="data" value="{{ analise.data }}" required>
@@ -57,7 +64,7 @@
           </select>
 
           <label for="teste">Teste:</label>
-          <input type="text" name="teste" id="tste" value="{{ analise.teste }}" required>
+          <input type="text" name="teste" id="teste" value="{{ analise.teste }}" required>
 
           <label for="justificativa">Justificativa:</label>
           <textarea name="justificativa" id="justificativa" placeholder="Texto de justificativa"

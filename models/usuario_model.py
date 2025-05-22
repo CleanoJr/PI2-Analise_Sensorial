@@ -16,6 +16,7 @@ class Usuario(Base):
     senha = Column(String(15))
     tipo = Column(String(20))  # Pode ser "aluno" ou "professor"
     ativo = Column(String(10), default="Ativo")  # Mudando para String com valores "Ativo" ou "Inativo"
+    analises_responsavel = relationship("Analise", back_populates="responsavel")
     analises = relationship(
         "Analise",
         secondary=analise_usuario,
