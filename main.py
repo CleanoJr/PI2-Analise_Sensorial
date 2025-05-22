@@ -8,7 +8,15 @@ app.config['SECRET_KEY'] = 'minha_chave_secreta'
 
 from controllers.usuario_controller import *
 from controllers.aluno_controller import *
+from controllers.analise_controller import *
+from controllers.amostra_controller import *
+
+from models.testador_modal import *
+from models.avaliacao_modal import *
+
+# Cria todas as tabelas no banco de dados
+Base.metadata.create_all(bind=engine)
 
 #Inicia o servidor de desenvolvimento.
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
