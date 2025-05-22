@@ -1,7 +1,10 @@
 from main import app
 from flask import request, render_template, redirect, url_for, flash, session
 from models.analise_model import Analise
+from models.amostra_model import Amostra
 from models.usuario_model import Usuario
+from models.avaliacao_modal import Avaliacao
+import itertools
 from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 from sqlalchemy.orm import joinedload
@@ -203,3 +206,29 @@ def remover_participante(id):
         db.close()
 
     return redirect(url_for('detalhes_analise', id=id))
+
+# Rota para mostrar o dpf com a distribuicao das avaliacoes
+@app.route("/analise/avaliacoes/<int:id>", methods=['GET'])
+def visualizar_distribuicao_avaliacoes(id, ):
+    db = SessionLocal()  
+    amostras = db.query(Amostra).filter_by(analise_id=id).all()
+    idsdasAmostras = [obj.id for obj in amostras]
+    qtdTestadores = 120
+    permutacoes = list(itertools.permutations(idsdasAmostras))
+    cont = 0
+    #limitar a quantidade de testadores
+    while(cont < 120):
+      for idx, p in enumerate(permutacoes, start=1):       
+        for i in range(len(p)):
+          cont = cont+1
+          nova_avalicao = Avaliacao(
+             numero = cont,
+             status = 'criado',
+             amostra_id = p[i]  
+          )          
+          db.add(nova_avalicao)     
+         
+    db.commit()
+    db.close()  
+    return  permutacoes
+   # return redirect(url_for('detalhes_analise', id=id))

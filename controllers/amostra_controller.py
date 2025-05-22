@@ -93,3 +93,5 @@ def excluir_amostra(id, amostra_id):
 
     flash("Amostra excluída com sucesso!", "success")
     return redirect(url_for('detalhes_analise', id=id))
+
+

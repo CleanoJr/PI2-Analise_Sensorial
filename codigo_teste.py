@@ -9,7 +9,7 @@ def exibir_permutacoes(n):
     for idx, p in enumerate(permutacoes, start=1):       
         for i in range(len(p)):
           cont = cont+1        
-          print(f"{cont} : {p[i]}")
+          print(f"{cont} : {p[i]} {i}")
         print("\n")
         #nesta linha salvar a avaliacao
       
