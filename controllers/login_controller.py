@@ -56,7 +56,7 @@ def cadastro():
         cur.execute("INSERT INTO usuarios (username, senha) VALUES (%s, %s)", (username, hash_senha.decode('utf-8')))
         mysql.connection.commit()
         cur.close()
-
+        
         return redirect('/login')
     return render_template_string(login_html)
 
