@@ -26,7 +26,7 @@ login_html = '''
     </form>
 '''
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('admin', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
