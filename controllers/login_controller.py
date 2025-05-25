@@ -15,11 +15,15 @@ mysql = MySQL(app)
 
 # HTML Simples
 login_html = '''
-<form method="POST">
-  Usuário: <input type="text" name="username"><br>
-  Senha: <input type="password" name="password"><br>
-  <input type="submit" value="Login">
-</form>
+    <form action="{{ url_for('admin')}}" method="GET">
+      <div class="mb-3">
+        <input type="text" id="username" class="form-control" placeholder="Usuário" required />
+      </div>
+      <div class="mb-3">
+        <input type="password" id="password" class="form-control" placeholder="Senha" required />
+      </div>
+      <button type="submit" class="btn btn-ifce w-100">Entrar</button>
+    </form>
 '''
 
 @app.route('/login', methods=['GET', 'POST'])
