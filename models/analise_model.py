@@ -10,6 +10,7 @@ class Analise(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     produto = Column(String(255), nullable=False)
     responsavel_id = Column(Integer, ForeignKey('usuarios.id'))
+    grau_de_escala = Column(Integer, nullable=False)
     data = Column(String(255), nullable=False)
     status = Column(String(255), nullable=False)
     teste = Column(String(255), nullable=False)
@@ -24,9 +25,10 @@ class Analise(Base):
         back_populates="analises"
     )
 
-    def __init__(self, produto, responsavel_id, data, status, teste, justificativa=None):
+    def __init__(self, produto, responsavel_id, grau_de_escala, data, status, teste, justificativa=None):
         self.produto = produto
         self.responsavel_id = responsavel_id
+        self.grau_de_escala = grau_de_escala
         self.data = data
         self.status = status
         self.teste = teste

@@ -40,6 +40,7 @@ def nova_analise():
     if request.method == 'POST':
         produto = request.form['produto']
         responsavel_id = request.form['responsavel']
+        grau_de_escala = request.form['grau']
         data = request.form['data']
         status = request.form['status']
         teste = request.form['teste']
@@ -57,6 +58,7 @@ def nova_analise():
         nova_analise = Analise(
             produto=produto,
             responsavel_id=responsavel_id,
+            grau_de_escala=grau_de_escala,
             data=data,
             status=status,
             teste=teste,
@@ -132,6 +134,7 @@ def editar_analise(id):
 
     analise.produto = request.form['produto']
     analise.responsavel_id = responsavel_id
+    analise.grau_de_escala = request.form['grau_de_escala']
     analise.data = request.form['data']
     analise.status = request.form['status']
     analise.teste = request.form['teste']

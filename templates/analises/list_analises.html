@@ -91,6 +91,7 @@
                 <th>Produto</th>
                 <th>Status</th>
                 <th class="d-none d-md-table-cell">Responsável</th>
+                <th>grau_de_escala</th>
                 <th class="d-none d-md-table-cell">Data</th>
                 <th class="d-none d-md-table-cell">Teste</th>
                 <th class="actions">Ações</th>
@@ -103,6 +104,7 @@
                 <td>{{ analise.produto }}</td>
                 <td>{{ analise.status }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</td>
+                <td>{{ analise.grau_de_escala }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.data }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.teste }}</td>
                 <td class="actions">
