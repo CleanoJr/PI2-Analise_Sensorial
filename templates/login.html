@@ -61,14 +61,14 @@
 <body>
   <div class="login-container">
     <h2 class="login-title">Login</h2>
-    <form action="{{ url_for('admin')}}" method="GET">
-      <div class="mb-3">
-        <input type="text" id="username" class="form-control" placeholder="Usuário" required />
-      </div>
-      <div class="mb-3">
-        <input type="password" id="password" class="form-control" placeholder="Senha" required />
-      </div>
-      <button type="submit" class="btn btn-ifce w-100">Entrar</button>
+    <form action="/login" method="POST">
+        <label for="username">Usuário:</label>
+        <input type="text" name="username" required><br>
+        
+        <label for="password">Senha:</label>
+        <input type="password" name="password" required><br>
+        
+        <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>
   </div>
 </body>
