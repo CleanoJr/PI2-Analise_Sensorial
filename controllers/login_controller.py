@@ -9,7 +9,7 @@ app.secret_key = 'chave_secreta'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'seu_usuario'
 app.config['MYSQL_PASSWORD'] = 'sua_senha'
-app.config['MYSQL_DB'] = 'nome_do_banco'
+app.config['MYSQL_DB'] = 'analise_db'
 
 mysql = MySQL(app)
 

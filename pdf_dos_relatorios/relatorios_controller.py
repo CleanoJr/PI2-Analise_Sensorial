@@ -4,8 +4,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from io import BytesIO
 import os
-
-app = Flask(__name__)
+from main import app
 
 @app.route("/relatorio")
 def gerar_pdf():
@@ -59,6 +58,3 @@ def gerar_pdf():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; filename=relatorio_pesquisas.pdf'
     return response
-
-if __name__ == "__main__":
-    app.run(debug=True)

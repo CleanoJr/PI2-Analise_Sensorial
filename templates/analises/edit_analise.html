@@ -53,6 +53,9 @@
           <label for="data">Data:</label>
           <input type="date" name="data" id="data" value="{{ analise.data }}" required>
 
+          <label for="grau_de_escala">Grau de escala:</label>
+          <input type="text" name="grau_de_escala" id="grau_de_escala" value="{{ analise.grau_de_escala }}" required>
+
           <label for="status">Status:</label>
           <select name="status" id="status" required>
             <option value="Aguardando liberação" {% if analise.status=='Aguardando liberação' %}selected{% endif %}>
