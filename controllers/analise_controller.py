@@ -9,6 +9,8 @@ from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 from sqlalchemy.orm import joinedload
 
+from sqlalchemy import desc  # importa a função desc descending da biblioteca sqlalchemy
+
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -17,7 +19,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def lista_analises():
     db = SessionLocal()
     try:
-        analises = db.query(Analise).options(joinedload(Analise.responsavel)).all()
+        analises = db.query(Analise).options(joinedload(Analise.responsavel)).order_by(desc(Analise.id)).all()
         # Força o acesso ao relacionamento para garantir que esteja carregado
         for analise in analises:
             _ = analise.responsavel
@@ -43,6 +45,8 @@ def nova_analise():
         data = request.form['data']
         status = request.form['status']
         teste = request.form['teste']
+        quantidade_amostras = request.form['quantidade_amostras']
+        quantidade_avaliadores =request.form['quantidade_avaliadores']
         justificativa = request.form['justificativa']
 
 
@@ -60,6 +64,8 @@ def nova_analise():
             data=data,
             status=status,
             teste=teste,
+            quantidade_amostras=quantidade_amostras,
+            quantidade_avaliadores=quantidade_avaliadores,
             justificativa=justificativa,
 
         )
@@ -135,6 +141,8 @@ def editar_analise(id):
     analise.data = request.form['data']
     analise.status = request.form['status']
     analise.teste = request.form['teste']
+    analise.quantidade_amostras = request.form['quantidade_amostras']
+    analise.quantidade_avaliadores =request.form['quantidade_avaliadores']
     analise.justificativa = request.form['justificativa']
 
     db.commit()

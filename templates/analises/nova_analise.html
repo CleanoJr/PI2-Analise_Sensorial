@@ -36,10 +36,10 @@
 
         <form action="{{ url_for('nova_analise') }}" method="POST">
           <label for="produto">Produto:</label>
-          <input type="text" name="produto" id="produto" class="form-control" required>
+          <input type="text" name="produto" id="produto" required>
 
           <label for="responsavel">Professor Responsável:</label>
-          <select name="responsavel" id="responsavel" class="form-select" required>
+          <select name="responsavel" id="responsavel" required>
             <option value="" disabled selected>Selecione um professor</option>
             {% for professor in professores %}
               <option value="{{ professor.id }}">{{ professor.nome }}</option>
@@ -47,10 +47,10 @@
           </select>
 
           <label for="data">Data:</label>
-          <input type="date" name="data" id="data" class="form-control" required>
+          <input type="date" name="data" id="data" required>
 
           <label for="status">Status:</label>
-          <select name="status" id="status" class="form-select" required>
+          <select name="status" id="status" required>
             <option value="Aguardando liberação">Aguardando liberação</option>
             <option value="Em andamento">Em andamento</option>
             <option value="Em análise">Em análise</option>
@@ -58,7 +58,13 @@
           </select>
 
           <label for="teste">Teste:</label>
-          <input type="text" name="teste" id="teste" class="form-control" required>
+          <input type="text" name="teste" id="teste" required>
+
+          <label for="quantidade_amostras">Quantidade de Amostras:</label>
+          <input type="number" id="quantidade_amostras" name="quantidade_amostras" min="1" required>
+
+          <label for="quantidade_avaliadores">Quantidade de Avaliadores:</label>
+          <input type="number" id="quantidade_avaliadores" name="quantidade_avaliadores" min="1" required>
 
           <label for="justificativa">Justificativa:</label>
           <textarea name="justificativa" id="justificativa" placeholder="Texto de justificativa"
