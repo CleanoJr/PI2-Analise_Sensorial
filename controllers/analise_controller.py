@@ -5,6 +5,7 @@ from models.amostra_model import Amostra
 from models.usuario_model import Usuario
 from models.avaliacao_modal import Avaliacao
 import itertools
+import random
 from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 from sqlalchemy.orm import joinedload
@@ -244,22 +245,34 @@ def visualizar_distribuicao_avaliacoes(id, ):
     db = SessionLocal()  
     amostras = db.query(Amostra).filter_by(analise_id=id).all()
     idsdasAmostras = [obj.id for obj in amostras]
-    qtdTestadores = 120
+    qtdTestadores = 13
+    qtdAmostras = len(amostras)
     permutacoes = list(itertools.permutations(idsdasAmostras))
     cont = 0
+    finalizar = False    
     #limitar a quantidade de testadores
-    while(cont < 120):
+    qtdTotalAvaliacoes = qtdTestadores*qtdAmostras
+    vetorNumeros = gerar_lista_aleatoria_sem_repeticao(999,qtdTotalAvaliacoes)
+    while(cont < qtdTotalAvaliacoes):
       for idx, p in enumerate(permutacoes, start=1):       
-        for i in range(len(p)):
-          cont = cont+1
+        for i in range(len(p)):          
           nova_avalicao = Avaliacao(
-             numero = cont,
+             numero = vetorNumeros.pop(0) ,
              status = 'criado',
              amostra_id = p[i]  
-          )          
+          )   
+          cont = cont+1       
           db.add(nova_avalicao)     
-         
+          if(cont == qtdTotalAvaliacoes):
+              i =  len(p)+1   
+              finalizar = True  
+        if finalizar:
+          break 
+
     db.commit()
     db.close()  
-    return  permutacoes
+    return  vetorNumeros
    # return redirect(url_for('detalhes_analise', id=id))
+
+def gerar_lista_aleatoria_sem_repeticao(n, tamanho):
+    return random.sample(range(1, n + 1), tamanho)
