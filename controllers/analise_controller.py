@@ -248,13 +248,23 @@ def visualizar_distribuicao_avaliacoes(id):
     amostras = db.query(Amostra).filter_by(analise_id=id).all()
     idsdasAmostras = [obj.id for obj in amostras]
     permutacoes = list(itertools.permutations(idsdasAmostras))   
-    qtdTestadores = 13
+
+    analise = db.query(Analise).get(id)
+    qtdTestadores = analise.quantidade_avaliadores
     qtdAmostras = len(amostras)
     qtdTotalAvaliacoes = qtdTestadores*qtdAmostras
 
     #teste = criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes)
+    avaliacoes = db.execute(
+        select(Avaliacao)
+        .join(Avaliacao.amostra)
+        .join(Amostra.analise)
+        .where(Analise.id == id)
+        .order_by(Avaliacao.id) 
+    ).scalars().all()
 
-   
+    if(len(avaliacoes) < qtdTotalAvaliacoes):
+       criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes)
         
     db.commit()
     db.close()   
