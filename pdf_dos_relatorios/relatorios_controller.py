@@ -12,77 +12,109 @@ from models.avaliacao_modal import Avaliacao
 from models.conexao import *
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker 
-
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph, Spacer, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @app.route("/relatorio/<int:analise_id>/distribuicao", methods=['GET'])
-def gerar_pdf_distribuicao_avaliacao(analise_id):   
-
-   #dados do banco 
+def gerar_pdf_distribuicao_avaliacao(analise_id):
+    # Dados do banco
     db = SessionLocal()
     avaliacoes = db.execute(
         select(Avaliacao)
         .join(Avaliacao.amostra)
         .join(Amostra.analise)
         .where(Analise.id == analise_id)
-    ).scalars().all()     
+        .order_by(Avaliacao.id) 
+    ).scalars().all()
     analise = db.query(Analise).filter_by(id=analise_id).first()
-    db.close()   
 
+    amostras = db.query(Amostra).filter_by(analise_id=analise_id).all()
+    descricao_das_amostras = [obj.descricao for obj in amostras]
+    db.close()
+
+    # PDF com platypus
     buffer = BytesIO()
-    largura, altura = A4
-    pdf = canvas.Canvas(buffer, pagesize=A4)
-
-    # Caminho da imagem (logo)
-    logo_path = os.path.join(os.path.dirname(__file__), "logoifce.png")
-
-    # Marca d'água (imagem centralizada e translúcida)
-    if os.path.exists(logo_path):
-        pdf.saveState()
-        pdf.translate(largura / 2, altura / 2)
-        pdf.rotate(0)
-        pdf.setFillAlpha(0.1)  # Transparência
-        pdf.drawImage(logo_path, -150, -150, width=300, height=300, preserveAspectRatio=True, mask='auto')
-        pdf.restoreState()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    elementos = []
+    estilos = getSampleStyleSheet()
 
     # Título
-    pdf.setFont("Helvetica-Bold", 18)
-    pdf.drawString(130, altura - 80, "Distribuição da analise:"+analise.produto)
- 
-    y = altura - 120
-    pdf.setFont("Helvetica", 12)
+    titulo = Paragraph(f"<b>Distribuição da análise: {analise.produto}</b>", estilos["Title"])
+    elementos.append(titulo)
+    elementos.append(Spacer(1, 20))
 
-    x_inicial = 150
-    y = altura - 120  # topo da página
-    espacamento_x = 170     # espaço entre colunas
-    espacamento_y = 20      # espaço entre linhas
-
-    for i, avaliacao in enumerate(avaliacoes):
-        coluna = i % 3  # 0, 1 ou 2
-        linha = i // 3
-        x = x_inicial + coluna * espacamento_x
-
-        if coluna == 0 and i != 0:
-            y -= espacamento_y
-
-        # Desenhar o número da linha apenas uma vez, no início da linha
-        if coluna == 0:
-            pdf.drawString(50, y, f"{linha + 1}")  # Número da linha, mais à esquerda
-
-        texto = f"{avaliacao.numero}"
-        pdf.drawString(x, y, texto)
+    # Dados formatados em tabela
 
 
+    cabecalho = ['Controle']
+    # Gerar nomes dinâmicos com base nos índices das avaliações   
+   # for amostra in amostras:
+      #   cabecalho.append(amostra.descricao)
 
-    # Finaliza e envia
-    pdf.showPage()
-    pdf.save()
+    dados = [cabecalho]  
+
+    linha_atual = []
+    numero_linha = 1
+
+    for i, avaliacao in enumerate(avaliacoes, start=1):
+        amostra = db.query(Amostra).get(avaliacao.amostra_id)
+        avalicaoExibido =str(avaliacao.numero)+"  - Amostra: "+amostra.descricao
+        linha_atual.append(avalicaoExibido)
+        if len(linha_atual) == 3:
+            dados.append([str(numero_linha)] + linha_atual)
+            linha_atual = []
+            numero_linha += 1
+
+    if linha_atual:
+        while len(linha_atual) < 3:
+            linha_atual.append("")
+        dados.append([str(numero_linha)] + linha_atual)
+
+    # Criar tabela com estilo verde (tipo Bootstrap table-success)
+    # Cores em tons de verde
+    verde_claro = colors.HexColor('#d4edda')  # cor de fundo clara (Bootstrap success)
+    verde_mais_claro = colors.HexColor('#eaf5ec')  # variação para listras alternadas
+    verde_texto = colors.HexColor('#155724')  # texto verde escuro
+    verde_cabecalho = colors.HexColor('#28a745')  # verde escuro para cabeçalho
+
+
+    tabela = Table(dados, colWidths=[60, 140, 140, 140])
+    # Estilo base
+    estilo = [
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+
+        # Cabeçalho
+        ('BACKGROUND', (0, 0), (-1, 0), verde_cabecalho),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+    ]
+
+    # Linhas com fundo alternado
+    for i in range(1, len(dados)):  # pula o cabeçalho (linha 0)
+        cor_fundo = verde_claro if i % 2 == 0 else verde_mais_claro
+        estilo.append(('BACKGROUND', (0, i), (-1, i), cor_fundo))
+        estilo.append(('TEXTCOLOR', (0, i), (-1, i), verde_texto))
+        estilo.append(('ALIGN', (0, i), (-1, i), 'LEFT'))
+
+    # Aplicar o estilo
+    tabela.setStyle(TableStyle(estilo))
+
+    elementos.append(tabela)
+
+    doc.build(elementos)
     buffer.seek(0)
 
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=relatorio_pesquisas.pdf'
-    return response
+    response.headers['Content-Disposition'] = 'inline; filename=distribuicao_avaliacoes.pdf'
+    return response 
+
+  
