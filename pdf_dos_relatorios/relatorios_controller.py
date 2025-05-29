@@ -6,8 +6,32 @@ from io import BytesIO
 import os
 from main import app
 
-@app.route("/relatorio")
-def gerar_pdf():
+from models.analise_model import Analise
+from models.amostra_model import Amostra
+from models.avaliacao_modal import Avaliacao
+from models.conexao import *
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker 
+
+
+# Criando a sessão para interagir com o banco de dados
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@app.route("/relatorio/<int:analise_id>/distribuicao", methods=['GET'])
+def gerar_pdf_distribuicao_avaliacao(analise_id):   
+
+   #dados do banco 
+    db = SessionLocal()
+    avaliacoes = db.execute(
+        select(Avaliacao)
+        .join(Avaliacao.amostra)
+        .join(Amostra.analise)
+        .where(Analise.id == analise_id)
+    ).scalars().all()     
+    analise = db.query(Analise).filter_by(id=analise_id).first()
+    db.close()   
+
     buffer = BytesIO()
     largura, altura = A4
     pdf = canvas.Canvas(buffer, pagesize=A4)
@@ -26,28 +50,32 @@ def gerar_pdf():
 
     # Título
     pdf.setFont("Helvetica-Bold", 18)
-    pdf.drawString(50, altura - 80, "Relatório de Pesquisas - Análise Sensorial")
-
-    # Lista de nomes de pesquisas
-    pesquisas = [
-        "Análise sensorial de bolos sem glúten",
-        "Estudo comparativo entre cafés orgânicos",
-        "Avaliação de aceitação de sucos naturais",
-        "Teste de preferência entre chocolates amargos",
-        "Análise sensorial de iogurtes com probióticos",
-        "Preferência de consumidores por leite vegetal",
-        "Avaliação de crocância em snacks assados",
-    ]
-
+    pdf.drawString(130, altura - 80, "Distribuição da analise:"+analise.produto)
+ 
     y = altura - 120
     pdf.setFont("Helvetica", 12)
 
-    for i, nome in enumerate(pesquisas, start=1):
-        if y < 80:  # Se a página estiver cheia, cria nova página
-            pdf.showPage()
-            y = altura - 80
-        pdf.drawString(70, y, f"{i}. {nome}")
-        y -= 25
+    x_inicial = 150
+    y = altura - 120  # topo da página
+    espacamento_x = 170     # espaço entre colunas
+    espacamento_y = 20      # espaço entre linhas
+
+    for i, avaliacao in enumerate(avaliacoes):
+        coluna = i % 3  # 0, 1 ou 2
+        linha = i // 3
+        x = x_inicial + coluna * espacamento_x
+
+        if coluna == 0 and i != 0:
+            y -= espacamento_y
+
+        # Desenhar o número da linha apenas uma vez, no início da linha
+        if coluna == 0:
+            pdf.drawString(50, y, f"{linha + 1}")  # Número da linha, mais à esquerda
+
+        texto = f"{avaliacao.numero}"
+        pdf.drawString(x, y, texto)
+
+
 
     # Finaliza e envia
     pdf.showPage()

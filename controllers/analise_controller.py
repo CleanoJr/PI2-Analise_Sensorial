@@ -4,11 +4,13 @@ from models.analise_model import Analise
 from models.amostra_model import Amostra
 from models.usuario_model import Usuario
 from models.avaliacao_modal import Avaliacao
+from pdf_dos_relatorios.relatorios_controller import *
 import itertools
 import random
 from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 from sqlalchemy.orm import joinedload
+from sqlalchemy import select
 
 from sqlalchemy import desc  # importa a função desc descending da biblioteca sqlalchemy
 
@@ -241,17 +243,33 @@ def remover_participante(id):
 
 # Rota para mostrar o dpf com a distribuicao das avaliacoes
 @app.route("/analise/avaliacoes/<int:id>", methods=['GET'])
-def visualizar_distribuicao_avaliacoes(id, ):
+def visualizar_distribuicao_avaliacoes(id):
     db = SessionLocal()  
     amostras = db.query(Amostra).filter_by(analise_id=id).all()
     idsdasAmostras = [obj.id for obj in amostras]
+    permutacoes = list(itertools.permutations(idsdasAmostras))   
     qtdTestadores = 13
     qtdAmostras = len(amostras)
-    permutacoes = list(itertools.permutations(idsdasAmostras))
+    qtdTotalAvaliacoes = qtdTestadores*qtdAmostras
+
+    #teste = criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes)
+
+   
+        
+    db.commit()
+    db.close()   
+   
+    return   gerar_pdf_distribuicao_avaliacao(id)
+   
+
+def gerar_lista_aleatoria_sem_repeticao(n, tamanho):
+    return random.sample(range(1, n + 1), tamanho)
+
+def criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes):
+    db = SessionLocal()     
     cont = 0
     finalizar = False    
-    #limitar a quantidade de testadores
-    qtdTotalAvaliacoes = qtdTestadores*qtdAmostras
+    #limitar a quantidade de testadores   
     vetorNumeros = gerar_lista_aleatoria_sem_repeticao(999,qtdTotalAvaliacoes)
     while(cont < qtdTotalAvaliacoes):
       for idx, p in enumerate(permutacoes, start=1):       
@@ -268,11 +286,9 @@ def visualizar_distribuicao_avaliacoes(id, ):
               finalizar = True  
         if finalizar:
           break 
-
     db.commit()
     db.close()  
     return  vetorNumeros
-   # return redirect(url_for('detalhes_analise', id=id))
 
-def gerar_lista_aleatoria_sem_repeticao(n, tamanho):
-    return random.sample(range(1, n + 1), tamanho)
+def gerar_pdf_distribuicao_avaliacao(id):   
+    return redirect(url_for('gerar_pdf_distribuicao_avaliacao', analise_id=id))
