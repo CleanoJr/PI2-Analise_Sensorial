@@ -35,7 +35,7 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
 
     amostras = db.query(Amostra).filter_by(analise_id=analise_id).all()
     descricao_das_amostras = [obj.descricao for obj in amostras]
-    qtd_colunas_por_amostras = len(amostras)
+    qtd_colunas_por_amostras = len(amostras)    
     db.close()
 
     # PDF com platypus
@@ -86,6 +86,8 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
     largura_total_disponivel = 480  # valor aproximado para caber em A4 (margens consideradas)
     coluna_controle_largura = 60
     largura_restante = largura_total_disponivel - coluna_controle_largura
+    if(qtd_colunas_por_amostras == 0):
+        qtd_colunas_por_amostras = 1
     largura_colunas_amostras = largura_restante / qtd_colunas_por_amostras
     colWidths = [coluna_controle_largura] + [largura_colunas_amostras] * qtd_colunas_por_amostras
 

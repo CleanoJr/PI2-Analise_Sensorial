@@ -254,7 +254,6 @@ def visualizar_distribuicao_avaliacoes(id):
     qtdAmostras = len(amostras)
     qtdTotalAvaliacoes = qtdTestadores*qtdAmostras
 
-    #teste = criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes)
     avaliacoes = db.execute(
         select(Avaliacao)
         .join(Avaliacao.amostra)
