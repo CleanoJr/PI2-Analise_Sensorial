@@ -107,14 +107,11 @@
                 <td class="d-none d-md-table-cell">{{ analise.teste }}</td>
                 <td class="actions">
                   <div class="d-flex justify-content-center gap-1">
-                     <a href="{{ url_for('visualizar_distribuicao_avaliacoes', id=analise.id) }}" class="btn btn-sm btn-success" title="Lista de Avaliações">
+                     <a href="{{ url_for('visualizar_distribuicao_avaliacoes', id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Distribuição das Amostras">
                     <i class="fa-regular fa-file"></i>
                     </a>
 
-                      
-
-
-                    <a href="{{ url_for('detalhes_analise', id=analise.id) }}" class="btn btn-sm btn-primary" title="Detalhes">
+                    <a href="{{ url_for('detalhes_analise', id=analise.id) }}"  class="btn btn-sm btn-primary" title="Detalhes">
                       <i class="fa-solid fa-eye"></i>
                     </a>
                     <a href="{{ url_for('form_editar_analise', id=analise.id) }}" class="btn btn-sm btn-warning" title="Editar">

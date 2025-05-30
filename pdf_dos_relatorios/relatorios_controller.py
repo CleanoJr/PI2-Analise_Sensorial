@@ -35,6 +35,7 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
 
     amostras = db.query(Amostra).filter_by(analise_id=analise_id).all()
     descricao_das_amostras = [obj.descricao for obj in amostras]
+    qtd_colunas_por_amostras = len(amostras)
     db.close()
 
     # PDF com platypus
@@ -49,29 +50,26 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
     elementos.append(Spacer(1, 20))
 
     # Dados formatados em tabela
-
-
-    cabecalho = ['Controle']
-    # Gerar nomes dinâmicos com base nos índices das avaliações   
-   # for amostra in amostras:
-      #   cabecalho.append(amostra.descricao)
-
+    cabecalho = ['Controle']  
     dados = [cabecalho]  
+
+    #organizando o tamanho do texto na celula da tabela
+    estilo_texto = estilos["Normal"]
 
     linha_atual = []
     numero_linha = 1
 
     for i, avaliacao in enumerate(avaliacoes, start=1):
         amostra = db.query(Amostra).get(avaliacao.amostra_id)
-        avalicaoExibido =str(avaliacao.numero)+"  - Amostra: "+amostra.descricao
-        linha_atual.append(avalicaoExibido)
-        if len(linha_atual) == 3:
+        avalicaoExibido = str(avaliacao.numero) + "  - Amostra: " + amostra.descricao
+        linha_atual.append(Paragraph(avalicaoExibido, estilo_texto))
+        if len(linha_atual) == qtd_colunas_por_amostras:
             dados.append([str(numero_linha)] + linha_atual)
             linha_atual = []
             numero_linha += 1
 
     if linha_atual:
-        while len(linha_atual) < 3:
+        while len(linha_atual) < qtd_colunas_por_amostras:
             linha_atual.append("")
         dados.append([str(numero_linha)] + linha_atual)
 
@@ -83,7 +81,15 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
     verde_cabecalho = colors.HexColor('#28a745')  # verde escuro para cabeçalho
 
 
-    tabela = Table(dados, colWidths=[60, 140, 140, 140])
+
+    #ajustando a tabela conforme a quantidade de amostras
+    largura_total_disponivel = 480  # valor aproximado para caber em A4 (margens consideradas)
+    coluna_controle_largura = 60
+    largura_restante = largura_total_disponivel - coluna_controle_largura
+    largura_colunas_amostras = largura_restante / qtd_colunas_por_amostras
+    colWidths = [coluna_controle_largura] + [largura_colunas_amostras] * qtd_colunas_por_amostras
+
+    tabela = Table(dados, colWidths=colWidths)
     # Estilo base
     estilo = [
         ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
@@ -109,6 +115,7 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
 
     elementos.append(tabela)
 
+    doc.title = f"Distribuição das amostras"
     doc.build(elementos)
     buffer.seek(0)
 
@@ -116,5 +123,6 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; filename=distribuicao_avaliacoes.pdf'
     return response 
+    
 
   
