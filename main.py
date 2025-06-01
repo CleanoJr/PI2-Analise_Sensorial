@@ -13,7 +13,7 @@ from controllers.amostra_controller import *
 
 from models.testador_modal import *
 from models.avaliacao_modal import *
-from pdf_dos_relatorios.login_controller import *
+from pdf_dos_relatorios.relatorios_controller import *
 
 # Cria todas as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
