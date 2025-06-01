@@ -1,64 +1,47 @@
-from flask import Flask, request, render_template_string, redirect, session
-from flask_mysqldb import MySQL
-import bcrypt
+from flask import Flask, session, redirect, url_for, render_template_string
 
 app = Flask(__name__)
-app.secret_key = 'chave_secreta'
+app.secret_key = 'sua_chave_secreta'  # Necessário para usar sessões
 
-# Configuração do MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'seu_usuario'
-app.config['MYSQL_PASSWORD'] = 'sua_senha'
-app.config['MYSQL_DB'] = 'analise_db'
+def login_required(f):
+    def wrapper(*args, **kwargs):
+        if 'nome' not in session:
+            return redirect(url_for('login'))  # Redireciona se não estiver logado
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
 
-mysql = MySQL(app)
+@app.route('/painel')
+@login_required
+def painel():
+    nome = session['nome']
+    return render_template_string('''
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Painel</title>
+        </head>
+        <body>
+            Bem vindo ao Painel, {{ nome }}.
 
-# HTML Simples
-login_html = '''
-    <form action="{{ url_for('admin')}}" method="GET">
-      <div class="mb-3">
-        <input type="text" id="username" class="form-control" placeholder="Usuário" required />
-      </div>
-      <div class="mb-3">
-        <input type="password" id="password" class="form-control" placeholder="Senha" required />
-      </div>
-      <button type="submit" class="btn btn-ifce w-100">Entrar</button>
-    </form>
-'''
+            <p>
+                <a href="{{ url_for('logout') }}">Sair</a>
+            </p>
+        </body>
+        </html>
+    ''', nome=nome)
 
-@app.route('admin', methods=['GET', 'POST'])
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+@app.route('/login')
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password'].encode('utf-8')
-
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT senha FROM usuarios WHERE username = %s", (username,))
-        user = cur.fetchone()
-        cur.close()
-
-        if user and bcrypt.checkpw(password, user[0].encode('utf-8')):
-            session['usuario'] = username
-            return f'Bem-vindo, {username}!'
-        else:
-            return 'Login inválido'
-
-    return render_template_string(login_html)
-
-@app.route('/cadastro', methods=['GET', 'POST'])
-def cadastro():
-    if request.method == 'POST':
-        username = request.form['username']
-        senha = request.form['password'].encode('utf-8')
-        hash_senha = bcrypt.hashpw(senha, bcrypt.gensalt())
-
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO usuarios (username, senha) VALUES (%s, %s)", (username, hash_senha.decode('utf-8')))
-        mysql.connection.commit()
-        cur.close()
-        
-        return redirect('/login')
-    return render_template_string(login_html)
+    return "Página de login (simulada)"
 
 if __name__ == '__main__':
     app.run(debug=True)

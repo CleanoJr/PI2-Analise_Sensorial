@@ -1,49 +1,76 @@
-from flask import Flask, request, session, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import check_password_hash
+from flask import Flask, request, redirect, session, render_template_string
+import sqlite3  # ou use pymysql para MySQL
+import hashlib
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta'
+app.secret_key = 'sua_chave_secreta'  # Necessário para sessões
 
-# Configuração do banco (exemplo SQLite)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios.db'
-db = SQLAlchemy(app)
+def get_db_connection():
+    conn = sqlite3.connect('analise.db')  # Altere conforme seu banco
+    conn.row_factory = sqlite3.Row
+    return conn
 
-# Modelo de Usuário
-class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    senha = db.Column(db.String(255), nullable=False)  # senha hashed
-
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    if request.method == 'POST':
+        email = request.form.get('email')
+        senha = request.form.get('senha')
 
-    user = Usuario.query.filter_by(username=username).first()
+        if not email:
+            return "Preencha seu e-mail"
+        elif not senha:
+            return "Preencha sua senha"
+        else:
+            conn = get_db_connection()
+            cursor = conn.cursor()
 
-    if user and check_password_hash(user.senha, password):
-        session['usuario'] = username  # Guarda usuário na sessão
-        return redirect(url_for('admin'))
+            # Hash da senha pode ser utilizado por segurança
+            # senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+
+            cursor.execute("SELECT * FROM usuarios WHERE email = ? AND senha = ?", (email, senha))
+            usuario = cursor.fetchone()
+            conn.close()
+
+            if usuario:
+                session['id'] = usuario['id']
+                session['nome'] = usuario['nome']
+                return redirect('/painel')  # redireciona para painel
+            else:
+                return "Falha ao logar! E-mail ou senha incorretos"
+
+    # Exemplo simples de formulário se o método for GET
+    return render_template_string('''
+        <form method="post">
+            Email: <input type="text" name="email"><br>
+            Senha: <input type="password" name="senha"><br>
+            <input type="submit" value="Entrar">
+        </form>
+    ''')
+
+@app.route('/painel')
+def painel():
+    if 'id' in session:
+        return f"Bem-vindo, {session['nome']}!"
     else:
-        return "Senha incorreta."
+        return redirect('/login')
 
-@app.route('/admin')
-def admin():
-    if 'usuario' not in session:
-        return redirect(url_for('login_page'))  # redireciona se não logado
-    return f"Bem-vindo à área administrativa, {session['usuario']}!"
+if __name__ == '__main__':
+    app.run(debug=True)
 
-@app.route('/login')
-def login_page():
-    # Aqui você poderia renderizar a página de login
-    return '''
-    <form method="POST" action="/login">
-      Usuário: <input type="text" name="username"><br>
-      Senha: <input type="password" name="password"><br>
-      <input type="submit" value="Login">
-    </form>
-    '''
+    
+from flask import Flask, session, redirect
+
+app = Flask(__name__)
+app.secret_key = 'sua_chave_secreta'  # Necessário para usar sessões
+
+@app.route('/logout')
+def logout():
+    session.clear()  # Equivalente a session_destroy() do PHP
+    return redirect('/index')  # Redireciona para a página inicial (index)
+
+@app.route('/index')
+def index():
+    return "Você está na página inicial."
 
 if __name__ == '__main__':
     app.run(debug=True)
