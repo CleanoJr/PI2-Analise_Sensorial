@@ -17,6 +17,7 @@ class Usuario(Base):
     tipo = Column(String(20))  # Pode ser "aluno" ou "professor"
     ativo = Column(String(10), default="Ativo")  # Mudando para String com valores "Ativo" ou "Inativo"
     analises_responsavel = relationship("Analise", back_populates="responsavel")
+    responsaveis_produto = relationship("Produtos", back_populates="responsaveis")
     analises = relationship(
         "Analise",
         secondary=analise_usuario,
