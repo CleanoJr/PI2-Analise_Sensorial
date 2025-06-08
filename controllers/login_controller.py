@@ -1,47 +1,46 @@
-from flask import Flask, session, redirect, url_for, render_template_string
+from flask import Flask, render_template, request
+import mysql.connector
+import hashlib
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta'  # Necessário para usar sessões
 
-def login_required(f):
-    def wrapper(*args, **kwargs):
-        if 'nome' not in session:
-            return redirect(url_for('login'))  # Redireciona se não estiver logado
-        return f(*args, **kwargs)
-    wrapper.__name__ = f.__name__
-    return wrapper
-
-@app.route('/painel')
-@login_required
-def painel():
-    nome = session['nome']
-    return render_template_string('''
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Painel</title>
-        </head>
-        <body>
-            Bem vindo ao Painel, {{ nome }}.
-
-            <p>
-                <a href="{{ url_for('logout') }}">Sair</a>
-            </p>
-        </body>
-        </html>
-    ''', nome=nome)
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('login'))
-
-@app.route('/login')
+# Configuração do banco de dados
+ analise_db= analise_db
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'sistema_login'
+} 
+@app.route('/', methods=['GET', 'POST'])
 def login():
-    return "Página de login (simulada)"
+    mensagem = ''
+    if request.method == 'POST':
+        username = request.form['username']
+        senha = request.form['senha']
+        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+
+        try:
+            conn = mysql.connector.connect(**analise_db
+            cursor = conn.cursor(dictionary=True)
+            query = "SELECT * FROM usuarios WHERE username = %s AND senha = %s"
+            cursor.execute(query, (username, senha_hash))
+            user = cursor.fetchone()
+
+            if user:
+                mensagem = "Login realizado com sucesso!"
+                # Aqui você pode redirecionar, criar sessão, etc.
+            else:
+                mensagem = "Usuário ou senha incorretos!"
+
+        except Exception as e:
+            mensagem = f"Erro ao conectar ao banco de dados: {str(e)}"
+
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+
+    return render_template('login.html', mensagem=mensagem)
 
 if __name__ == '__main__':
     app.run(debug=True)
