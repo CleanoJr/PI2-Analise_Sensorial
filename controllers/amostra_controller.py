@@ -1,6 +1,7 @@
 from main import app
 from flask import request, render_template, redirect, url_for, flash, session
 from models.amostra_model import Amostra
+from models.analise_model import Analise
 from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 

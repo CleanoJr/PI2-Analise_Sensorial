@@ -1,4 +1,5 @@
-from flask import flash
+from flask import flash, redirect, request
+from main import app
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -7,7 +8,7 @@ def login():
     
     if email == 'clara123@gmail.com' and senha == '123':
         return redirect('/painel_aluno.html')
-    else
+    else:
         return redirect('/login.html')
         
     ANALISE_DB = get_db()
