@@ -20,12 +20,12 @@ def login():
 
     if not user:
         flash("Usuário não encontrado.", "danger")
-        return redirect(url_for('home'))
+        return redirect(url_for('login.html'))
 
     if not check_password_hash(user['senha'], senha):
         flash("Senha incorreta.", "danger")
-        return redirect(url_for('home'))
+        return redirect(url_for('login.html'))
 
     session['usuario_id'] = user['id']
     session['email'] = user['email']
-    return redirect(url_for('painel'))
+    return redirect(url_for('painel_aluno'))
