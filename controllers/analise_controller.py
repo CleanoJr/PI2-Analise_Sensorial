@@ -172,74 +172,74 @@ def excluir_analise(id):
     return redirect(url_for('lista_analises'))
 
 # Rota para adicionar participante
-@app.route("/analise/<int:id>/adicionar_participante", methods=['POST'])
-def adicionar_participante(id):
-    db = SessionLocal()
-    try:
-        analise = db.query(Analise).filter_by(id=id).first()
-        if not analise:
-            flash('Análise não encontrada', 'error')
-            return redirect(url_for('lista_analises'))
+# @app.route("/analise/<int:id>/adicionar_participante", methods=['POST'])
+# def adicionar_participante(id):
+#     db = SessionLocal()
+#     try:
+#         analise = db.query(Analise).filter_by(id=id).first()
+#         if not analise:
+#             flash('Análise não encontrada', 'error')
+#             return redirect(url_for('lista_analises'))
 
-        usuario_id = request.form.get('usuario_id')
-        if not usuario_id:
-            flash('Usuário não especificado', 'error')
-            return redirect(url_for('detalhes_analise', id=id))
+#         usuario_id = request.form.get('usuario_id')
+#         if not usuario_id:
+#             flash('Usuário não especificado', 'error')
+#             return redirect(url_for('detalhes_analise', id=id))
 
-        # Busca apenas usuários ativos
-        usuario = db.query(Usuario).filter_by(id=usuario_id, ativo="Ativo").first()
-        if not usuario:
-            flash('Usuário inválido ou inativo', 'error')
-            return redirect(url_for('detalhes_analise', id=id))
+#         # Busca apenas usuários ativos
+#         usuario = db.query(Usuario).filter_by(id=usuario_id, ativo="Ativo").first()
+#         if not usuario:
+#             flash('Usuário inválido ou inativo', 'error')
+#             return redirect(url_for('detalhes_analise', id=id))
 
-        if usuario in analise.participantes:
-            flash('Usuário já adicionado', 'warning')
-        else:
-            analise.participantes.append(usuario)
-            db.commit()
-            flash('Participante adicionado com sucesso', 'success')
+#         if usuario in analise.participantes:
+#             flash('Usuário já adicionado', 'warning')
+#         else:
+#             analise.participantes.append(usuario)
+#             db.commit()
+#             flash('Participante adicionado com sucesso', 'success')
 
-    except Exception as e:
-        db.rollback()
-        flash(f'Ocorreu um erro: {str(e)}', 'error')
-    finally:
-        db.close()
+#     except Exception as e:
+#         db.rollback()
+#         flash(f'Ocorreu um erro: {str(e)}', 'error')
+#     finally:
+#         db.close()
 
-    return redirect(url_for('detalhes_analise', id=id))
+#     return redirect(url_for('detalhes_analise', id=id))
 
-@app.route("/analise/<int:id>/remover_participante", methods=['POST'])
-def remover_participante(id):
-    db = SessionLocal()
-    try:
-        analise = db.query(Analise).filter_by(id=id).first()
-        if not analise:
-            flash('Análise não encontrada', 'error')
-            return redirect(url_for('lista_analises'))
+# @app.route("/analise/<int:id>/remover_participante", methods=['POST'])
+# def remover_participante(id):
+#     db = SessionLocal()
+#     try:
+#         analise = db.query(Analise).filter_by(id=id).first()
+#         if not analise:
+#             flash('Análise não encontrada', 'error')
+#             return redirect(url_for('lista_analises'))
 
-        usuario_id = request.form.get('usuario_id')
-        if not usuario_id:
-            flash('Usuário não especificado', 'error')
-            return redirect(url_for('detalhes_analise', id=id))
+#         usuario_id = request.form.get('usuario_id')
+#         if not usuario_id:
+#             flash('Usuário não especificado', 'error')
+#             return redirect(url_for('detalhes_analise', id=id))
 
-        usuario = db.query(Usuario).filter_by(id=usuario_id).first()
-        if not usuario:
-            flash('Usuário inválido', 'error')
-            return redirect(url_for('detalhes_analise', id=id))
+#         usuario = db.query(Usuario).filter_by(id=usuario_id).first()
+#         if not usuario:
+#             flash('Usuário inválido', 'error')
+#             return redirect(url_for('detalhes_analise', id=id))
 
-        if usuario in analise.participantes:
-            analise.participantes.remove(usuario)
-            db.commit()
-            flash('Participante removido com sucesso', 'success')
-        else:
-            flash('Usuário não faz parte da análise', 'warning')
+#         if usuario in analise.participantes:
+#             analise.participantes.remove(usuario)
+#             db.commit()
+#             flash('Participante removido com sucesso', 'success')
+#         else:
+#             flash('Usuário não faz parte da análise', 'warning')
 
-    except Exception as e:
-        db.rollback()
-        flash(f'Ocorreu um erro: {str(e)}', 'error')
-    finally:
-        db.close()
+#     except Exception as e:
+#         db.rollback()
+#         flash(f'Ocorreu um erro: {str(e)}', 'error')
+#     finally:
+#         db.close()
 
-    return redirect(url_for('detalhes_analise', id=id))
+#     return redirect(url_for('detalhes_analise', id=id))
 
 # Rota para mostrar o dpf com a distribuicao das avaliacoes
 @app.route("/analise/avaliacoes/<int:id>", methods=['GET'])

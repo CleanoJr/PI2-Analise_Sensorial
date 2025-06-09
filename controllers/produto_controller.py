@@ -75,21 +75,20 @@ def detalhes_produto(id):
     db = SessionLocal()
     try:
         produto = db.query(Produto).options(
-            joinedload(Produto.participantes),
-            joinedload(Produto.responsavel)
+            joinedload(Produto.responsaveis_id),
+            joinedload(Produto.responsaveis)
         ).filter_by(id=id).first()
         
-        if not analise:
-            flash("Análise não encontrada!", "error")
-            return redirect(url_for('lista_analises'))
+        if not produto:
+            flash("Produto não encontrado!", "error")
+            return redirect(url_for('lista_produtos'))
         
-        amostras = analise.amostras
+        
         usuarios = db.query(Usuario).filter_by(ativo="Ativo").all()
         
         return render_template(
-            "/produtos/detalhe_analise.html",
-            analise=analise,
-            amostras=amostras,
+            "/produtos/detalhe_produto.html",
+            produto=produto,
             usuarios=usuarios
         )
     finally:
@@ -153,72 +152,74 @@ def excluir_produto(id):
     flash("Produto excluído com sucesso!", "success")
     return redirect(url_for('lista_produtos'))
 
-# Rota para adicionar participante
-# @app.route("/produtos/<int:id>/adicionar_participante", methods=['POST'])
-# def adicionar_participante(id):
-#     db = SessionLocal()
-#     try:
-#         analise = db.query(Analise).filter_by(id=id).first()
-#         if not analise:
-#             flash('Análise não encontrada', 'error')
-#             return redirect(url_for('lista_analises'))
+#Rota para adicionar participante
+@app.route("/produtos/<int:id>/adicionar_participante", methods=['POST'])
+def adicionar_participante(id):
+    db = SessionLocal()
+    try:
+        produto = db.query(Produto).filter_by(id=id).first()
+        if not produto:
+            flash('Produto não encontrado', 'error')
+            return redirect(url_for('lista_produtos'))
 
-#         usuario_id = request.form.get('usuario_id')
-#         if not usuario_id:
-#             flash('Usuário não especificado', 'error')
-#             return redirect(url_for('detalhes_analise', id=id))
+        usuario_id = request.form.get('usuario_id')
+        if not usuario_id:
+            flash('Usuário não especificado', 'error')
+            return redirect(url_for('detalhes_produto', id=id))
 
-#         # Busca apenas usuários ativos
-#         usuario = db.query(Usuario).filter_by(id=usuario_id, ativo="Ativo").first()
-#         if not usuario:
-#             flash('Usuário inválido ou inativo', 'error')
-#             return redirect(url_for('detalhes_analise', id=id))
+        # Busca apenas usuários ativos
+        usuario = db.query(Usuario).filter_by(id=usuario_id, ativo="Ativo").first()
+        if not usuario:
+            flash('Usuário inválido ou inativo', 'error')
+            return redirect(url_for('detalhes_produto', id=id))
 
-#         if usuario in analise.participantes:
-#             flash('Usuário já adicionado', 'warning')
-#         else:
-#             analise.participantes.append(usuario)
-#             db.commit()
-#             flash('Participante adicionado com sucesso', 'success')
+    
+        db.refresh(produto)  # Garante que o produto esteja atualizado
+        if usuario in produto.responsaveis:
+            flash('Usuário já adicionado', 'warning')
+        else:
+            produto.responsaveis.append(usuario)
+            db.commit()
+            flash('Participante adicionado com sucesso', 'success')
 
-#     except Exception as e:
-#         db.rollback()
-#         flash(f'Ocorreu um erro: {str(e)}', 'error')
-#     finally:
-#         db.close()
+    except Exception as e:
+        db.rollback()
+        flash(f'Ocorreu um erro: {str(e)}', 'error')
+    finally:
+        db.close()
 
-#     return redirect(url_for('detalhes_analise', id=id))
+    return redirect(url_for('detalhes_produto', id=id))
 
-# @app.route("/produtos/<int:id>/remover_participante", methods=['POST'])
-# def remover_participante(id):
-#     db = SessionLocal()
-#     try:
-#         analise = db.query(Analise).filter_by(id=id).first()
-#         if not analise:
-#             flash('Análise não encontrada', 'error')
-#             return redirect(url_for('lista_analises'))
+@app.route("/produtos/<int:id>/remover_participante", methods=['POST'])
+def remover_participante(id):
+    db = SessionLocal()
+    try:
+        produto = db.query(Produto).filter_by(id=id).first()
+        if not produto:
+            flash('Produto não encontrado', 'error')
+            return redirect(url_for('lista_produtos'))
 
-#         usuario_id = request.form.get('usuario_id')
-#         if not usuario_id:
-#             flash('Usuário não especificado', 'error')
-#             return redirect(url_for('detalhes_analise', id=id))
+        usuario_id = request.form.get('usuario_id')
+        if not usuario_id:
+            flash('Usuário não especificado', 'error')
+            return redirect(url_for('detalhes_produto', id=id))
 
-#         usuario = db.query(Usuario).filter_by(id=usuario_id).first()
-#         if not usuario:
-#             flash('Usuário inválido', 'error')
-#             return redirect(url_for('detalhes_analise', id=id))
+        usuario = db.query(Usuario).filter_by(id=usuario_id).first()
+        if not usuario:
+            flash('Usuário inválido', 'error')
+            return redirect(url_for('detalhes_produto', id=id))
 
-#         if usuario in analise.participantes:
-#             analise.participantes.remove(usuario)
-#             db.commit()
-#             flash('Participante removido com sucesso', 'success')
-#         else:
-#             flash('Usuário não faz parte da análise', 'warning')
+        if usuario in produto.responsaveis:
+            produto.responsaveis.remove(usuario)
+            db.commit()
+            flash('Participante removido com sucesso', 'success')
+        else:
+            flash('Usuário não faz parte da produto', 'warning')
 
-#     except Exception as e:
-#         db.rollback()
-#         flash(f'Ocorreu um erro: {str(e)}', 'error')
-#     finally:
-#         db.close()
+    except Exception as e:
+        db.rollback()
+        flash(f'Ocorreu um erro: {str(e)}', 'error')
+    finally:
+        db.close()
 
-#     return redirect(url_for('detalhes_analise', id=id))
+    return redirect(url_for('detalhes_produto', id=id))

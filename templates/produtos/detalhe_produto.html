@@ -30,15 +30,13 @@
         </header>
 
         <div class="details-section mb-4">
-          <h2>{{ analise.produto }}</h2>
+          <h2>{{ produto.nome }}</h2>
           <div class="row">
-            <div class="col-md-4"><p><strong>Responsável:</strong> {{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</p></div>
-            <div class="col-md-4"><p><strong>Data:</strong> {{ analise.data }}</p></div>
-            <div class="col-md-4"><p><strong>Status:</strong> {{ analise.status }}</p></div>
-            <div class="col-md-4"><p><strong>Teste:</strong> {{ analise.teste }}</p></div>
+            <div class="col-md-4"><p><strong>Responsável:</strong> {{ produto.responsaveis.nome if produto.responsaveis else 'Nenhum' }}</p></div>
+            <div class="col-md-4"><p><strong>Data:</strong> {{ produto.data_cadastro }}</p></div>
             <div class="col-md-4">
-              {% if analise.justificativa %}
-                <p><strong>Justificativa:</strong> {{ analise.justificativa }}</p>
+              {% if produto.justificativa %}
+                <p><strong>Justificativa:</strong> {{ produto.justificativa }}</p>
               {% endif %}
             </div>
           </div>
@@ -59,13 +57,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for participante in analise.participantes | default([]) %}
+                  {% for participante in produto.responsaveis | default([]) %}
                   <tr>
                     <td>{{ participante.nome }}</td>
                     <td>{{ participante.tipo|title }}</td>
                     <td>
                       <form method="POST" 
-                        action="{{ url_for('remover_participante', id=analise.id) }}" 
+                        action="{{ url_for('remover_participante', id=produto.id) }}" 
                         onsubmit="return confirm('Tem certeza que deseja remover este participante?');" 
                         class="m-0 p-0 d-inline">
                           <input type="hidden" name="usuario_id" value="{{ participante.id }}">
@@ -84,7 +82,7 @@
           <!-- Modal: Adicionar Participante -->
           <div class="modal fade" id="addParticipantModal" tabindex="-1" aria-labelledby="addParticipantModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-              <form method="POST" action="{{ url_for('adicionar_participante', id=analise.id) }}" class="modal-content">
+              <form method="POST" action="{{ url_for('adicionar_participante', id=produto.id) }}" class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="addParticipantModalLabel">Adicionar Participante</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -106,43 +104,6 @@
                 </div>
               </form>
             </div>
-          </div>
-        </div>
-
-        <!-- Amostras -->
-        <div class="details-section">
-          <h3>Amostras</h3>
-          <a href="{{ url_for('nova_amostra', id=analise.id) }}" class="btn btn-success mb-3">
-            <i class="fa-solid fa-plus"></i> Nova Amostra
-          </a>
-          <div class="table-responsive custom-table">
-            <table class="table table-bordered table-hover align-middle text-center custom-table">
-              <thead class="table-success">
-                <tr>
-                  <th>#</th>
-                  <th>Descrição</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for amostra in amostras %}
-                <tr>
-                  <td>{{ loop.index }}</td>
-                  <td>{{ amostra.descricao }}</td>
-                  <td>
-                    <div class="d-flex justify-content-center gap-1">
-                      <a href="{{ url_for('editar_amostra', id=analise.id, amostra_id=amostra.id) }}" class="btn btn-sm btn-warning" title="Editar">
-                        <i class="fa-solid fa-edit"></i>
-                      </a>
-                      <a href="{{ url_for('excluir_amostra', id=analise.id, amostra_id=amostra.id) }}" class="btn btn-sm btn-danger" title="Apagar" onclick="return confirm('Tem certeza que deseja apagar esta amostra?');">
-                        <i class="fa-solid fa-trash"></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
           </div>
         </div>
 
