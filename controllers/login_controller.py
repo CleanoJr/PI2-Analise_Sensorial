@@ -1,25 +1,24 @@
 
 from flask import flash, redirect, request
-from main import app
+from models import usuario_model
 
-from flask import flash
 from main import app
 from flask import request, render_template, redirect, url_for, flash
-from models.usuario_model import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     db = SessionLocal() 
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        login = request.form['login']
+        senha = request.form['senha']
 
-    email = request.form['email']
-    senha = request.form['senha']
-
-    if email == 'clara123@gmail.com' and senha == '123':
-        return redirect('/painel_aluno.html')
-    else
-        return redirect('/login.html')
-         
+        user = db.session.query(usuario_model).filter_by(email=email, senha=senha).first()
+        if not user:
+            return 'Email ou senha incorretos.'
+        
