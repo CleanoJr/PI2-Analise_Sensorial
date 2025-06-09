@@ -10,11 +10,21 @@ class Avaliacao(Base):
     status = Column(String(255), nullable=False)
     amostra_id = Column(Integer, ForeignKey("amostras.id"), nullable=False)
     testador_id = Column(Integer, ForeignKey("testadores.id"), nullable=True)
+    
+    numero_controle = Column(Integer,nullable=True)   
+    impressao_global = Column(Integer,nullable=True)
+    cor = Column(Integer,nullable=True)
+    aroma = Column(Integer,nullable=True)
+    textura = Column(Integer,nullable=True)
+    sabor = Column(Integer,nullable=True)
+    intencao_compra = Column(String(255), nullable=True)
+    observacao = Column(String(255), nullable=True)
 
     amostra = relationship("Amostra", back_populates="avaliacoes")
 
-    def __init__(self, numero, status,amostra_id):
+    def __init__(self, numero, status,amostra_id, numero_controle):
         self.numero = numero
         self.status = status
-        self.amostra_id = amostra_id    
+        self.amostra_id = amostra_id   
+        self.numero_controle = numero_controle    
          
