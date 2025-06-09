@@ -5,6 +5,11 @@ def login():
     email = request.form['email']
     senha = request.form['senha']
     
+    if email == 'clara123@gmail.com' and senha == '123':
+        print('acesso')
+    else
+        print('acesso negado')
+        
     ANALISE_DB = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
