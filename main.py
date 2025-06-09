@@ -14,7 +14,7 @@ from controllers.amostra_controller import *
 from models.testador_modal import *
 from models.avaliacao_modal import *
 from pdf_dos_relatorios.relatorios_controller import *
-from flask_app.config import *
+#from flask_app.config import *
 #from flask_app.app import *
 #from flask_app.create_user import *
 
