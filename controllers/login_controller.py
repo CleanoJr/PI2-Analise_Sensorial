@@ -6,9 +6,9 @@ def login():
     senha = request.form['senha']
     
     if email == 'clara123@gmail.com' and senha == '123':
-        print('acesso')
+        return redirect('/painel_aluno.html')
     else
-        print('acesso negado')
+        return redirect('/login.html')
         
     ANALISE_DB = get_db()
     cursor = db.cursor(dictionary=True)
