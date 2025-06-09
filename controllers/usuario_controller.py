@@ -4,6 +4,7 @@ from models.usuario_model import *
 from models.conexao import *
 from datetime import datetime  # Para converter a data corretamente
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
+import re
 
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -34,11 +35,23 @@ def create():
         senha = request.form['senha']
         tipo = request.form['tipo']
 
-        # Convertendo a data do formato string para o tipo Date
-        data_nascimento = datetime.strptime(data_str, '%Y-%m-%d').date()
 
-        # Cria um novo cadastro
-        new_usuario = Usuario(
+        # Validação do telefone
+    if not re.match(r'^\d{10,11}$', telefone):
+        flash("Telefone inválido. Use apenas números com DDD (10 ou 11 dígitos).")
+        return redirect(url_for('cad_inserir'))
+
+    # Convertendo a data do formato string para tipo Date
+    try:
+        data_nascimento = datetime.strptime(data_str, '%Y-%m-%d').date()
+    except ValueError:
+        flash("Data de nascimento inválida.")
+        return redirect(url_for('cad_inserir'))
+
+
+
+     # Cria um novo cadastro
+    new_usuario = Usuario(
             nome=nome,
             email=email,
             telefone=telefone,
@@ -50,25 +63,25 @@ def create():
             )
 
         # Cria uma nova sessão para o banco de dados
-        db = SessionLocal()
+    db = SessionLocal()
 
         # Adiciona o novo cadastro ao banco de dados
-        db.add(new_usuario)
-        db.commit()
+    db.add(new_usuario)
+    db.commit()
 
         # Redireciona para a página de lista de cadastros
-        flash("Usuario cadastrado com sucesso!", "success")
-        return redirect(url_for('lista'))
+    flash("Usuario cadastrado com sucesso!", "success")
+    return redirect(url_for('lista'))
 
 # Rota para exibir a lista de cadastros
 @app.route("/usuario/cadastro/inserir/list")
 def lista():
     # Cria uma nova sessão para o banco de dados
     db = SessionLocal()
-    
+
     # Consulta todos os cadastros no banco de dados
     cadastros = db.query(Usuario).all()
-    
+
     # Renderiza o template com a lista de cadastros
     return render_template("/usuario/list_usuario.html", cadastros=cadastros)
 
@@ -89,7 +102,14 @@ def update(id):
     if cadastro:
         cadastro.nome = request.form['nome']
         cadastro.email = request.form['email']
-        cadastro.telefone = request.form['telefone']
+
+    # Validação de telefone( somente números com 10 ou 11 dígitos)
+        telefone = request.form['telefone']
+        if not re.match(r'^\d{10,11}$', telefone):
+             flash("Telefone inválido.")
+             return redirect(url_for('editar', id=cadastro.id))
+
+        cadastro.telefone = telefone
         cadastro.data_nascimento = datetime.strptime(request.form['data_nascimento'], '%Y-%m-%d').date()
         cadastro.login = request.form['login']
         cadastro.senha = request.form['senha']
@@ -107,7 +127,7 @@ def update(id):
 def excluir(id):
     # Cria uma nova sessão para o banco de dados
     db = SessionLocal()
-    
+
     # Encontra o cadastro que corresponde ao ID
     usuario = db.query(Usuario).filter(Usuario.id == id).first()
 
@@ -117,7 +137,7 @@ def excluir(id):
         db.commit()
 
     db.close()
-    
+
     # Redireciona para a página de lista de cadastros após a exclusão
     flash("Usuario excluído com sucesso!", "success")
     return redirect(url_for('lista'))
