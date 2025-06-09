@@ -263,7 +263,7 @@ def visualizar_distribuicao_avaliacoes(id):
     ).scalars().all()
 
     if(len(avaliacoes) < qtdTotalAvaliacoes):
-       criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes)
+       criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes,qtdAmostras)
         
     db.commit()
     db.close()   
@@ -272,21 +272,30 @@ def visualizar_distribuicao_avaliacoes(id):
    
 
 def gerar_lista_aleatoria_sem_repeticao(n, tamanho):
-    return random.sample(range(1, n + 1), tamanho)
+    return random.sample(range(100, n + 1), tamanho)
 
-def criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes):
+def criar_avaliacoes_banco(permutacoes,qtdTotalAvaliacoes,qtdAmostras):
     db = SessionLocal()     
     cont = 0
     finalizar = False    
+
+    #para gerar o numero de controle    
+    numero_linha = 0
+
     #limitar a quantidade de testadores   
     vetorNumeros = gerar_lista_aleatoria_sem_repeticao(999,qtdTotalAvaliacoes)
     while(cont < qtdTotalAvaliacoes):
       for idx, p in enumerate(permutacoes, start=1):       
-        for i in range(len(p)):          
+        for i in range(len(p)):
+
+          if cont%qtdAmostras == 0: 
+             numero_linha += 1
+           
           nova_avalicao = Avaliacao(
              numero = vetorNumeros.pop(0) ,
              status = 'criado',
-             amostra_id = p[i]  
+             amostra_id = p[i] ,
+             numero_controle = numero_linha
           )   
           cont = cont+1       
           db.add(nova_avalicao)     
