@@ -1,54 +1,24 @@
-from flask import Flask, render_template, request
-import mysql.connector
-import hashlib
+from flask import flash
 
-app = Flask(__name__)
-
-from flask import Flask
-
-# Criação de uma instância do Flask
-app = Flask(__name__)
-
-# Chave secreta para criptografar a sessão
-app.config['SECRET_KEY'] = 'minha_chave_secreta'
-
-# Configuração do banco de dados
- analise_db= analise_db
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'sistema_login'
-} 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    mensagem = ''
-    if request.method == 'POST':
-        username = request.form['username']
-        senha = request.form['senha']
-        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+    email = request.form['email']
+    senha = request.form['senha']
+    
+    ANALISE_DB = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    db.close()
 
-        try:
-            conn = mysql.connector.connect(**analise_db
-            cursor = conn.cursor(dictionary=True)
-            query = "SELECT * FROM usuarios WHERE username = %s AND senha = %s"
-            cursor.execute(query, (username, senha_hash))
-            user = cursor.fetchone()
+    if not user:
+        flash("Usuário não encontrado.", "danger")
+        return redirect(url_for('home'))
 
-            if user:
-                mensagem = "Login realizado com sucesso!"
-                # Aqui você pode redirecionar, criar sessão, etc.
-            else:
-                mensagem = "Usuário ou senha incorretos!"
+    if not check_password_hash(user['senha'], senha):
+        flash("Senha incorreta.", "danger")
+        return redirect(url_for('home'))
 
-        except Exception as e:
-            mensagem = f"Erro ao conectar ao banco de dados: {str(e)}"
-
-        finally:
-            if conn.is_connected():
-                cursor.close()
-                conn.close()
-
-    return render_template('login.html', mensagem=mensagem)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    session['usuario_id'] = user['id']
+    session['email'] = user['email']
+    return redirect(url_for('painel'))
