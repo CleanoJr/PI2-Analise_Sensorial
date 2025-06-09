@@ -4,12 +4,7 @@ from flask import flash
 def login():
     email = request.form['email']
     senha = request.form['senha']
-    
-    if email == 'clara123@gmail.com' and senha == '123':
-        return redirect('/painel_aluno.html')
-    else
-        return redirect('/login.html')
-        
+         
     ANALISE_DB = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
