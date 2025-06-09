@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Date
 from sqlalchemy.orm import relationship
 from models.conexao import Base, engine  # Certifique-se de que a conexão com o banco está correta
-from models.associacoes import analise_usuario
+from models.associacoes import analise_usuario, produto_usuario
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -17,12 +17,19 @@ class Usuario(Base):
     tipo = Column(String(20))  # Pode ser "aluno" ou "professor"
     ativo = Column(String(10), default="Ativo")  # Mudando para String com valores "Ativo" ou "Inativo"
     analises_responsavel = relationship("Analise", back_populates="responsavel")
-    responsaveis_produto = relationship("Produtos", back_populates="responsaveis")
+    responsaveis_produto = relationship("Produto", back_populates="responsaveis")
     analises = relationship(
         "Analise",
         secondary=analise_usuario,
         back_populates="participantes"
     )
+
+    produtos = relationship(
+        "Produto",
+        secondary=produto_usuario,
+        back_populates="responsaveis"
+    )
+
 
     def __init__(self, nome, email, telefone, data_nascimento, login, senha, tipo, ativo="Ativo"):
         self.nome = nome
