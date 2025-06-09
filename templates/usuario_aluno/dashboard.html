@@ -52,7 +52,16 @@
     <h1>Dashboard de Análise Sensorial</h1>
   </header>
 
-  <div class="container">
+  <div class="container" style="width: 100%;">
+    <table class="table" >
+       <thead>
+    <tr>
+      <th scope="col">Dados da análise:</th>     
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
     <div class="card">
       <h2>Resumo dos Testes</h2>
       <ul>
@@ -62,23 +71,21 @@
         <li>Tipo: Hedônico</li>
       </ul>
     </div>
-
+   </td><td>
     <div class="card">
-      <h2>Radar de Atributos</h2>
-      <canvas id="radarChart"></canvas>
-    </div>
-
-    <div class="card">
-      <h2>Comparação de Amostras</h2>
+      <h2>Amostra A</h2>
       <canvas id="barChart"></canvas>
     </div>
-
+</td><td>
     <div class="card">
-      <h2>Perfil dos Avaliadores</h2>
-      <canvas id="pieChart"></canvas>
+      <h2>Amostra B</h2>
+      <canvas id="barChart2"></canvas>
     </div>
   </div>
-
+  </td>
+  </tr>
+   </tbody>
+</table>
 
 
 
@@ -86,30 +93,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
  <script>
-    // Radar Chart
-    const radarCtx = document.getElementById('radarChart').getContext('2d');
-    new Chart(radarCtx, {
-      type: 'radar',
-      data: {
-        labels: ['Sabor', 'Textura', 'Aroma', 'Aparência', 'Aceitação'],
-        datasets: [
-          {
-            label: 'Amostra A',
-            data: [80, 7, 9, 6, 8],
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',
-            borderColor: 'rgba(76, 175, 80, 1)',
-            borderWidth: 1
-          }
-        ]
-      }
-    });
-
+   
     // Bar Chart
     const barCtx = document.getElementById('barChart').getContext('2d');
     new Chart(barCtx, {
       type: 'bar',
       data: {
-        labels: ['Amostra A', 'Amostra B', 'Amostra C', 'Nova amostra d'],
+        labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
         datasets: [
           {
             label: 'Nota Média',
@@ -120,16 +110,17 @@
       }
     });
 
-    // Pie Chart
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
-      type: 'pie',
+     // Bar Chart
+    const barCtx2 = document.getElementById('barChart2').getContext('2d');
+    new Chart(barCtx2, {
+      type: 'bar',
       data: {
-        labels: ['Masculino', 'Feminino', 'Outro'],
+        labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
         datasets: [
           {
-            data: [40, 55, 5],
-            backgroundColor: ['#2196F3', '#E91E63', '#9E9E9E']
+            label: 'Nota Média',
+            data: [8.1, 7.3, 6.5, 5.8],
+            backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
           }
         ]
       }
