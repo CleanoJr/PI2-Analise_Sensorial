@@ -16,5 +16,5 @@ class Avaliacao(Base):
     def __init__(self, numero, status,amostra_id):
         self.numero = numero
         self.status = status
-        self.amostra_id = amostra_id       
+        self.amostra_id = amostra_id    
          
