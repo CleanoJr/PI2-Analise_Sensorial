@@ -17,25 +17,9 @@ def login():
 
     email = request.form['email']
     senha = request.form['senha']
-<<<<<<< HEAD
 
     if email == 'clara123@gmail.com' and senha == '123':
         return redirect('/painel_aluno.html')
     else
         return redirect('/login.html')
          
-=======
-    
-    if email == 'clara123@gmail.com' and senha == '123':
-        return redirect('/painel_aluno.html')
-    else:
-        return redirect('/login.html')
-        
-
-    ANALISE_DB = get_db()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
-    user = cursor.fetchone()
-    db.close()
->>>>>>> 616b7378ffc91284fe5c10e5207c0ca6a99800ba
-
