@@ -17,16 +17,12 @@ def login():
     login = request.form.get('login')
     senha = request.form.get('senha')
 
-    if login == 'igor' and senha == '123':
+    if login == self.login and senha == self.senha:
 
         return render_template("painel_admin.html")
     else:
 
         return redirect('/')
     
-
-
-
-
 if __name__ in "__main__":
     app.run(debug=True)    
