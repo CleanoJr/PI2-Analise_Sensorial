@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'IGORKEVEN'
+app.config['SECRET_KEY'] = 'ANALISESENSORIAL'
 
 logado = False
 
