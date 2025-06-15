@@ -1,4 +1,9 @@
-
+from flask import Flask, render_template, redirect, request, flash, send_from_directory, url_for
+import json
+import ast
+import os
+from pathlib import Path
+import mysql.connector
 from flask import flash, redirect, request
 from models import usuario_model
 
@@ -6,19 +11,142 @@ from main import app
 from flask import request, render_template, redirect, url_for, flash
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 
-# Criando a sessão para interagir com o banco de dados
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
+caminho = Path(__file__)
+pasta_atual = caminho.parent
 
-@app.route('/login', methods=['GET', 'POST'])
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'IGORKEVEN'
+
+logado = False
+
+@app.route('/')
+def home():
+    global logado
+    logado = False
+    return render_template('login.html')
+
+@app.route('/adm')
+def adm():
+    if logado == True:
+        with open('usuarios.json') as usuariosTemp:More actions
+            usuarios = json.load(usuariosTemp)
+            
+        return render_template("administrador.html",usuarios=usuarios)
+    if logado == False:
+        return redirect('/')
+
+@app.route('/usuarios')
+def usuarios():
+    if logado == True:
+        arquivo = []
+        for documento in os.listdir(f'{pasta_atual}/arquivos'):
+            arquivo.append(documento)
+
+        return render_template("usuarios.html", arquivos=arquivo)
+    else:
+        return redirect('/')
+
+
+
+@app.route('/login', methods=['POST'])
 def login():
-    db = SessionLocal() 
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        login = request.form['login']
-        senha = request.form['senha']
+    global logado
+    nome = request.form.get('nome')
+    senha = request.form.get('senha')
 
-        user = db.session.query(usuario_model).filter_by(email=email, senha=senha).first()
-        if not user:
-            return 'Email ou senha incorretos.'
+    conect_BD = mysql.connector.connect(host='localhost', database='usuarios',user='root', password='')
+    cont = 0
+    if conect_BD.is_connected():
+        print('conectado')
+        cursur = conect_BD.cursor()
+        cursur.execute('select * from usuario;')
+        usuariosBD = cursur.fetchall()
+
+        for usuario in usuariosBD:
+            cont += 1
+            usuarioNome = str(usuario[1])
+            usuarioSenha = str(usuario[2])
+
+            if nome == 'adm' and senha == '000':
+                logado = True
+                return redirect('/adm')
+
+            if usuarioNome == nome and usuarioSenha == senha:
+                logado = True
+                return redirect('/usuarios')
+            
+            if cont >= len(usuariosBD):
+                flash('USUARIO INVALIDO')
+                return redirect("/")
+    else:
+        return redirect('/')
+
+@app.route('/cadastrarUsuario', methods=['POST'])
+def cadastrarUsuario():
+    global logado
+    user = []
+    nome = request.form.get('nome')
+    senha = request.form.get('senha')
+    user = [
+        {
+            "nome": nome,
+            "senha": senha
+        }
+    ]
+    with open('usuarios.json') as usuariosTemp:
+        usuarios = json.load(usuariosTemp)
+
+    usuarioNovo = usuarios + user
+
+    with open('usuarios.json', 'w') as gravarTemp:
+        json.dump(usuarioNovo, gravarTemp, indent=4 )
+    logado = True
+    flash(F'{nome} CADASTRADO!!')
+    return redirect('/adm')
+
+
+@app.route('/excluirUsuario', methods=['POST'])
+def excluirUsuario():
+    global logado
+    logado = True
+    usuario = request.form.get('usuarioPexcluir')
+    usuarioDict = ast.literal_eval(usuario)
+    nome = usuarioDict['nome']
+    with open('usuarios.json') as usuariosTemp:
+        usuariosJson = json.load(usuariosTemp)
+        for c in usuariosJson:
+            if c == usuarioDict:
+                usuariosJson.remove(usuarioDict)
+                with open('usuarios.json', 'w') as usuarioAexcluir:
+                    json.dump(usuariosJson, usuarioAexcluir, indent=4)
+
+    flash(F'{nome} EXCLUIDO')
+    return redirect('/adm')
+
+
+@app.route("/upload", methods=['POST'])
+def upload():
+    global logado
+    logado = True
+    
+    arquivo = request.files.get('documento')
+    nome_arquivo = arquivo.filename.replace(" ","-")
+    arquivo.save(os.path.join(f'{pasta_atual}/arquivos/', nome_arquivo))
+
+    flash('Arquivo salvo')
+    return redirect('/adm')
+
+
+
+@app.route('/download', methods=['POST'])
+def download():
+    nomeArquivo = request.form.get('arquivosParaDownload')
+
+    return send_from_directory('arquivos', nomeArquivo, as_attachment=True)
+
+
+
+if __name__ in "__main__":
+    app.run(debug=True)   
         
