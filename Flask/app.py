@@ -7,7 +7,6 @@ import re
 from flask import Flask, render_template, request, flash, redirect
 import os
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY']= "PALAVRA-SECRETA"
 @app.route("/")
