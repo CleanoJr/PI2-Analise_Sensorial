@@ -1,6 +1,12 @@
 from flask import request, render_template, redirect, url_for, flash
 import sqlite3
 import bcrypt
+from main import app
+from models.usuario_model import *
+from models.conexao import *
+from datetime import datetime  # Para converter a data corretamente
+from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
+import re
 
 app = Flask(__name__)
 app.secret_key = 'segredo_super_secreto'  # Use algo mais seguro em produção
