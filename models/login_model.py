@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Date
 from sqlalchemy.orm import relationship
 from models.conexao import Base, engine  # Certifique-se de que a conexão com o banco está correta
-from models.associacoes import analise_usuario
+from models.associacoes import analise_logins
 
 class Login(Base):
     __tablename__ = "logins"
