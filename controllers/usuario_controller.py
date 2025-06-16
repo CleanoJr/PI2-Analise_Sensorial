@@ -9,7 +9,7 @@ import re
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@app.route("/login", methods=['GET'])
+@app.route("/", methods=['GET'])
 def login():
     return render_template("/login.html")
 
