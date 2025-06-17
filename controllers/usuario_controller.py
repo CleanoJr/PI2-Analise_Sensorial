@@ -13,9 +13,19 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def login():
     return render_template("/login.html")
 
-@app.route("/admin", methods=['GET'])
+@app.route("/admin", methods=['POST'])
 def admin():
-    return render_template("/professor/painel_admin.html")
+    login = request.form['username']
+    senha = request.form['password']
+    db = SessionLocal()
+    usuarioLogado = db.query(Usuario).filter(Usuario.login==login,Usuario.senha == senha,Usuario.ativo == 'Ativo').first()
+    if (usuarioLogado):
+      if (usuarioLogado.tipo == 'professor'):
+         return render_template("/professor/painel_admin.html") 
+      else:
+         return render_template("/usuario_aluno/dashboard.html") 
+    flash('Login ou senha invalido')
+    return redirect("/")  
 
 # Rota para exibir o formulário
 @app.route("/usuario/cadastro/inserir", methods=['GET'])
