@@ -9,13 +9,13 @@ class Avaliador(Base):
     nome = Column(String(200), nullable=False)
     email = Column(String(15), nullable=False)
     genero = Column(String(20), nullable=False)
-    faixa_etaria = Column(Integer(20), nullable=False)
+    idade = Column(Integer(20), nullable=False)
    
    
     
-    def __init__(self, nome, email,genero,faixa_etaria):
+    def __init__(self, nome, email,genero,idade):
         self.nome = nome
         self.email = email
         self.genero= genero
-        self.faixa_etaria = faixa_etaria
+        self.idade = idade
       

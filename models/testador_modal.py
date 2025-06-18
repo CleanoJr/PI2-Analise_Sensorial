@@ -5,6 +5,6 @@ class Testador(Base):
     __tablename__ = "testadores"
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(255), nullable=False)
-    faixa_etaria = Column(String(255), nullable=False)
+    idade = Column(String(255), nullable=False)
     genero = Column(String(255), nullable=False)
    

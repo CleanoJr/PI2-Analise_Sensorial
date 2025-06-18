@@ -21,13 +21,13 @@ def enviar_avaliacao():
     nome = request.form.get('nome')
     email = request.form.get('email')
     genero = request.form.get('genero')
-    faixa_etaria = request.form.get('faixa_etaria')
+    idade = request.form.get('idade')
 
     avaliador = Avaliador(
         nome=nome,
         email=email,
         genero=genero,
-        faixa_etaria=faixa_etaria
+        idade=idade
     )
 
    
