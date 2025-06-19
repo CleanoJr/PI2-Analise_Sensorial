@@ -108,8 +108,8 @@
 
     <script>
         function aceitarTermo() {
-            alert("Você aceitou o termo de consentimento.");
-            // Aqui você pode adicionar um redirecionamento ou ação ao aceitar
+            alert("Tem certeza?");
+            window.location.href = "{{ url_for('formulario_analise', id=id) }}";
         }
     </script>
 

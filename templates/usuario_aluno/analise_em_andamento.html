@@ -45,7 +45,7 @@
             <thead class="table-success">
               <tr>
                 <th>#</th>
-                <th>Nome</th>
+                <th>Produto</th>
                 <th>Status</th>
                 <th class="d-none d-md-table-cell">Responsável</th>
                 <th class="d-none d-md-table-cell">Data</th>
@@ -58,7 +58,7 @@
               {% for analise in analises %}
               <tr id="analise-{{ analise.id }}">
                 <td>{{ loop.index }}</td>
-                <td>{{ analise.nome }}</td>
+                <td>{{ analise.produto }}</td>
                 <td>{{ analise.status }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.data }}</td>
@@ -66,7 +66,7 @@
                 <td class="d-none d-md-table-cell">58</td>
                 <td class="actions">
                   <div class="d-flex justify-content-center gap-1">
-                    <a href="{{ url_for('aluno_termo', id=analise.id) }}" class="btn btn-sm btn-primary" title="Detalhes">
+                    <a href="{{ url_for('formulario_analise', id=analise.id, produto=analise.produto, quantidade_amostras=analise.quantidade_amostras) }}" class="btn btn-sm btn-primary" title="Nova avaliação">
                       <i class="fa-regular fa-square-plus"></i>
                     </a>                                   
                   </div>

@@ -17,7 +17,7 @@ class Avaliacao(Base):
     aroma = Column(Integer,nullable=True)
     textura = Column(Integer,nullable=True)
     sabor = Column(Integer,nullable=True)
-    intencao_compra = Column(String(255), nullable=True)
+    intencao_compra = Column(Integer, nullable=True)
     observacao = Column(String(255), nullable=True)
 
     amostra = relationship("Amostra", back_populates="avaliacoes")

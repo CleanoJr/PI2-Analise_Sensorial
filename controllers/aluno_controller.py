@@ -14,10 +14,19 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def lista_analises_andamento():
     db = SessionLocal()
     try:
-        analises = db.query(Analise).options(joinedload(Analise.responsavel)).order_by(desc(Analise.id)).all()
-        # Força o acesso ao relacionamento para garantir que esteja carregado
+        analises = (
+            db.query(Analise)
+            .join(Analise.amostras)
+            .options(joinedload(Analise.responsavel), joinedload(Analise.amostras))
+            .group_by(Analise.id)
+            .order_by(desc(Analise.id))
+            .all()
+        )
+
+        # Adiciona quantidade_amostras em cada instância
         for analise in analises:
-            _ = analise.responsavel
+            analise.quantidade_amostras = len(analise.amostras)
+
         return render_template("/usuario_aluno/analise_em_andamento.html", analises=analises)
     finally:
         db.close()
@@ -34,10 +43,6 @@ def aluno_dashboard():
 @app.route("/aluno/analise", methods=['GET'])
 def aluno_analise():
     return render_template("/usuario_aluno/analise.html")
-
-@app.route("/aluno/termo", methods=['GET'])
-def aluno_termo():
-    return render_template("/usuario_aluno/termo.html")
 
 @app.route("/teste", methods=['GET'])
 def teste():
