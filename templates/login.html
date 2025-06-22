@@ -77,13 +77,6 @@
       </div>
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>
-  {% if session['usuario_logado'] %}
-  <p>Bem-vindo, {{ session['usuario_logado'] }}!</p>
-  <a href="{{ url_for('logout') }}">Sair</a>
-  {% else %}
-  <p>Você não está logado.</p>
-  <a href="{{ url_for('login') }}">Fazer login</a>
-  {% endif %}
   </div>
 </body>
 </html>
