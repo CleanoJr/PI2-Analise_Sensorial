@@ -1,6 +1,13 @@
 from functools import wraps
 from flask import session, redirect, url_for, flash
 
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+@app.route('/login')
+@login_obrigatorio
+def painel():
+    return render_template('login.html')
+
 def login_obrigatorio(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -11,9 +18,6 @@ def login_obrigatorio(f):
             return redirect(url_for('login'))
     return wrap
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@app.route('/login')
-@login_obrigatorio
-def painel():
-    return render_template('login.html')
+
+
