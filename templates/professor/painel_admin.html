@@ -24,7 +24,8 @@
 
       <div class="container-fluid">
         <header>
-          <h1 class="mb-4">Bem-vindo.</h1>
+          <h1 class="mb-4">Bem-vindo.{{ session['usuario_logado'] }}</h1>
+  <a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Sair</a>
         </header>
         <p>Escolha uma opção no menu para começar.</p>
       </div>

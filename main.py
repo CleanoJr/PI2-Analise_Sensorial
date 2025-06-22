@@ -11,7 +11,6 @@ from controllers.aluno_controller import *
 from controllers.analise_controller import *
 from controllers.amostra_controller import *
 from controllers.testador_controller import *
-from Flask.app import *
 from models.usuario_model import *
 from models.testador_modal import *
 from models.avaliacao_modal import *
