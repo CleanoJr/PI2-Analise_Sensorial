@@ -1,5 +1,5 @@
 firebase.auth().onAuthStateChanged(user => {
     if (!user) {
-        window.location.href = "../../login.html";
+        window.location.href = "../../painel_admin.html";
     }
 })
