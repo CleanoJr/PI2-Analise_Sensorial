@@ -10,6 +10,9 @@ def login_obrigatorio(f):
             flash('Você precisa estar logado para acessar esta página.', 'danger')
             return redirect(url_for('login'))
     return wrap
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 @app.route('/login')
 @login_obrigatorio
 def painel():
