@@ -10,7 +10,7 @@ def login_obrigatorio(f):
             flash('Você precisa estar logado para acessar esta página.', 'danger')
             return redirect(url_for('login'))
     return wrap
-@app.route('/painel')
+@app.route('/login')
 @login_obrigatorio
 def painel():
-    return render_template('painel.html')
+    return render_template('login.html')
