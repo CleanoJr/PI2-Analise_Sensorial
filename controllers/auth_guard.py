@@ -27,7 +27,7 @@ def login():
 
 @app.route('/admin')
 @login_obrigatorio
-def painel():
+def admin():
     return render_template('painel_admin.html', login=session['login'])
 
 @app.route('/logout')
