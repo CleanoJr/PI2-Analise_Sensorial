@@ -1,49 +1,24 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from functools import wraps
-
+from flask import Flask, render_template_string, request, session, redirect
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta'  # importante para sessões
+app.secret_key = 'segredo'
 
-# Função decoradora que exige login
-def login_obrigatorio(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'usuario_logado' in session:
-            return f(*args, **kwargs)
-        else:
-            flash('Faça login para acessar esta página.', 'danger')
-            return redirect(url_for('login'))
-    return wrap
+@app.route('/', methods=['GET', 'POST'])
+def login(): return render_template_string(T, erro='Login/Senha inválidos' if request.method=='POST' and (request.form['u']!='admin' or request.form['s']!='123') else None) if request.method=='GET' or (request.form['u']=='admin' and request.form['s']=='123' and not session.setdefault('u','admin')) else redirect('/painel')
 
-# Rota de login
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        login = request.form['login']
-        senha = request.form['senha']
+@app.route('/painel') 
+def painel(): return render_template_string('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><div class="container mt-5"><h1>Bem-vindo, {{session["u"]}}</h1><a href="/sair" class="btn btn-danger mt-3">Sair</a></div>') if 'u' in session else redirect('/')
 
-        # Autenticação simples (substitua por banco de dados real)
-        if usuario == 'admin' and senha == '123':
-            session['usuario_logado'] = usuario
-            flash('Login realizado com sucesso!', 'success')
-            return redirect(url_for('painel_admin'))
-        else:
-            flash('Usuário ou senha incorretos.', 'danger')
+@app.route('/sair')
+def sair(): session.clear(); return redirect('/')
 
-    return render_template('login.html')
+T = '''<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container mt-5"><h2>Login</h2>
+<form method="POST">
+  <input name="l" class="form-control mb-2" placeholder="Login">
+  <input name="s" type="password" class="form-control mb-2" placeholder="Senha">
+  <button class="btn btn-primary">Entrar</button>
+  {% if erro %}<div class="alert alert-danger mt-2">{{erro}}</div>{% endif %}
+</form></div>'''
 
-# Rota protegida
-@app.route('/login')
-@login_obrigatorio
-def login():
-    return render_template('painel_admin.html')
+app.run(debug=True)
 
-# Logout
-@app.route('/logout')
-def logout():
-    session.pop('usuario_logado', None)
-    flash('Você saiu com sucesso.', 'info')
-    return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
