@@ -78,20 +78,6 @@
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>
   </div>
-  <body class="bg-light d-flex justify-content-center align-items-center vh-100">
-  <div class="card p-4 shadow rounded" style="min-width: 300px;">
-    <h4 class="mb-3">Bem-vindo, {{ session['usuario_logado'] }}!</h4>
-    <a href="{{ url_for('logout') }}" class="btn btn-danger w-100">Sair</a>
-
-    {% def login_obrigatorio(f):%}%
-    {% @wraps(f)%}%
-    {% def decorated_function(*args, **kwargs):%}%
-        {% if 'usuario_logado' not in session:%}%
-            {% flash('Você precisa estar logado para acessar esta página.', 'danger')%}
-            {% return redirect(url_for('login'))%}
-        {% return f(*args, **kwargs)%}
-    {% return decorated_function%}
-  </div>
   <script src="../../auth-guard.js"></script>
   <script>
   // Verifica se o usuário está logado (supondo uma flag 'logado' no sessionStorage)
