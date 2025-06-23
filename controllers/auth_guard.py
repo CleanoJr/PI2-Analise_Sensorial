@@ -1,3 +1,4 @@
+from main import app
 from models.usuario_model import *
 from models.conexao import *
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
@@ -12,7 +13,6 @@ def login_obrigatorio(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
-
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
