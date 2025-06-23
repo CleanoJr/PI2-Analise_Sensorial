@@ -21,7 +21,38 @@
         <i class="fa-solid fa-bars"></i>
         <span class="sr-only">Abrir/fechar menu</span>
       </button>
+        <h1>Página Protegida</h1>
+  <p>Esta página só pode ser acessada por usuários logados.</p>
+  <button onclick="verificarLogin()">Verificar Login</button>
 
+  <script>
+    function verificarLogin() {
+      // Simula a verificação da sessão (substitua com sua lógica de autenticação)
+      const usuarioLogado = verificarSessao(); 
+
+      if (!usuarioLogado) {
+        alert("Você precisa estar logado para acessar esta página.");
+        // Redireciona para a página de login (substitua com a URL correta)
+        window.location.href = "login.html";
+      } else {
+        alert("Bem-vindo! Você está logado.");
+      }
+    }
+
+    function verificarSessao() {
+      // Função que simula a verificação da sessão (substitua com sua lógica de autenticação)
+      // Por exemplo, verificar se um token de sessão existe no localStorage ou cookie.
+      const token = localStorage.getItem('token'); // Exemplo: verificar se um token existe
+      return !!token; // Retorna true se o token existir, false caso contrário
+    }
+
+    // Chama a função de verificação ao carregar a página
+    // para redirecionar o usuário imediatamente se não estiver logado.
+    window.onload = function() {
+      verificarLogin();
+    };
+  </script>
+  
       <div class="container-fluid">
         <header>
           <h1 class="mb-4">Bem-vindo.</h1>
