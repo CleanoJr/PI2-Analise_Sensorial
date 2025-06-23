@@ -13,8 +13,8 @@ def login_required(f):
     return decorated_function
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def login():
+    return render_template('login.html')
 
 @app.route('/login')
 def login():
@@ -39,7 +39,7 @@ def login_process():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('painel_admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
