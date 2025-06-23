@@ -21,9 +21,9 @@ def login():
 def login():
     return render_template('login.html')
 
-@app.route('/admin')
+@app.route('/dashboard')
 @login_required
-def admin():
+def dasbboard():
     return render_template('painel_admin.html')
 
 @app.route('/login_process', methods=['POST'])
@@ -33,14 +33,14 @@ def login_process():
     password = request.form['password']
     if username == "user" and password == "password":
         session['logged_in'] = True
-        return redirect(url_for('admin'))
+        return redirect(url_for('dashboard'))
     else:
          return "Credenciais inválidas"
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    return redirect(url_for('admin'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
