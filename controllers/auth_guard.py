@@ -39,7 +39,7 @@ def login_process():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    return redirect(url_for('painel_admin'))
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
