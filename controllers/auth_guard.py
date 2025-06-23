@@ -1,28 +1,21 @@
-from flask import Flask, render_template_string, request, redirect, url_for
-app = Flask(__name__)
+from main import app
+from flask import request, render_template, redirect, url_for, flash
+from models.usuario_model import *
+from models.conexao import *
+from datetime import datetime  # Para converter a data corretamente
+from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
 
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        if request.form['u'] == 'admin' and request.form['s'] == '123':
-            return redirect(url_for('login_ok'))
-        else:
-            erro = 'Usuário ou senha incorretos.'
-            return render_template_string(T, erro=erro)
-    return render_template_string(T)
 
-@app.route('/login_ok')
-def login_ok():
-    return render_template_string('<div class="container mt-5"><h2>Login efetuado com sucesso!</h2></div>')
+# Criando a sessão para interagir com o banco de dados
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-T = '''<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<div class="container mt-5"><h2>Login</h2>
-<form method="POST">
-  <input name="u" class="form-control mb-2" placeholder="Usuário" required>
-  <input name="s" type="password" class="form-control mb-2" placeholder="Senha" required>
-  <button class="btn btn-primary">Entrar</button>
-</form>
-{% if erro %}<div class="alert alert-danger mt-2">{{erro}}</div>{% endif %}
-</div>'''
+@app.route('/painel_admin')
+@login_obrigatorio
+def painel_admin():
+    return render_template('login.html')
 
-app.run(debug=True)
+@app.route('/logout')
+def logout():
+    session.pop('usuario_logado', None)
+    return redirect(url_for('login'))
+
