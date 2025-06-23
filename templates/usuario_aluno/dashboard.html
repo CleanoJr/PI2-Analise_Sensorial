@@ -52,50 +52,15 @@
     <h1>Dashboard de Análise Sensorial </h1>
   </header>
 
-  <div class="container" style="width: 100%;">
-    <table class="table" >
-       <thead>
-    <tr>
-      <th scope="col">Dados da análise:</th>     
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-    <div class="card">
-      <h2>Resumo dos Testes</h2>
-      <ul>
-        <li>Testes realizados: 12</li>
-        <li>Amostras avaliadas: 5</li>
-        <li>Painelistas: 30</li>
-        <li>Tipo: Hedônico</li>
-      </ul>
-    </div>
-   </td><td>
-    <div class="card">
-      <h2>Amostra A</h2>
-      <canvas id="barChart"></canvas>
-    </div>
-</td><td>
-    <div class="card">
-      <h2>Amostra B</h2>
-      <canvas id="barChart2"></canvas>
-    </div>
-  </div>
-  </td>
-  </tr>
-   </tbody>
-</table>
+   {% for analise in analises %}
 
-
-
-  
+     
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
  <script>
    
     // Bar Chart
-    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barCtx = document.getElementById('barChart{{analise.id}}').getContext('2d');
     new Chart(barCtx, {
       type: 'bar',
       data: {
@@ -111,7 +76,7 @@
     });
 
      // Bar Chart
-    const barCtx2 = document.getElementById('barChart2').getContext('2d');
+    const barCtx2 = document.getElementById('barChart2{{analise.id}}').getContext('2d');
     new Chart(barCtx2, {
       type: 'bar',
       data: {
@@ -125,9 +90,89 @@
         ]
       }
     });
-  </script>
+
+
+    
+ 
+ 
+ </script>
+
+
+  <script type="text/javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                [''
+                  ,'sadf','432'
+                ],
+                [''
+                  ,'lkj','ljk'
+                ],
+            ]);
+
+            var options = {
+                title: '',
+                curveType: 'function',
+                legend: {position: 'bottom'},
+                colors: ['#0000FF', '#FF0000', '#00FF7F', '#FFFF00'],
+                vAxis: {
+                    title: 'teste'
+                }
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('{{analise.id}}'));
+            chart.draw(data, options);
+        }
+    </script>
+ 
+       <div class="container" style="width: 100%;"> 
+    <table class="table" >
+        <thead>
+            <tr>
+          <th scope="col">Dados da análise:{{ analise.produto }}</th>    
+        </tr>
+        
+      </thead>
+        <tbody>
+          <tr>
+            <td>
+          <div class="card">
+            <ul>
+              <li>Status:{{ analise.status }}</li>
+              <li>Testes realizados: 12</li>
+            </ul>
+          </div>
+        </td><td>
+          <div class="card">
+            <h2>Amostra A</h2>
+            <canvas id="barChart{{analise.id}}"></canvas>
+             <div id="{{analise.id}}" style="width: 100%; height: 100%"></div>
+          </div>
+      </td><td>
+          <div class="card">
+            <h2>Amostra B</h2>
+            <canvas id="barChart2{{analise.id}}"></canvas>
+          </div>
+       
+        </td>
+        </tr>
+        </tbody>
+      </table>
+       </div>
+   
+
+
+
+
+
+
 </body>
 </html>
+
+{% endfor %}
+
+
 
 
 {% endblock %}
