@@ -56,7 +56,7 @@
     <table class="table" >
        <thead>
     <tr>
-      <th scope="col">Dados da análise:</th>     
+      <th scope="col">Dados da análise: {{ analise.produto }}</th>     
     </tr>
   </thead>
   <tbody>
@@ -65,52 +65,55 @@
     <div class="card">
       <h2>Resumo dos Testes</h2>
       <ul>
-        <li>Testes realizados: {{  }}</li>
-        <li>Amostras avaliadas: 5</li>
-        <li>Painelistas: 30</li>
-        <li>Tipo: Hedônico</li>
+        <li>Testes realizados: {{ analise.qtd_avaliacoes }}</li>
+        <li>Amostras avaliadas: {{ analise.qtd_amostras }}</li>
+        <!--  <li>Painelistas: 30</li> -->
+        <li>Tipo: {{ analise.teste }}</li>
       </ul>
     </div>
-   </td><td>
-    <div class="card">
-      <h2>Amostra A</h2>
-      <canvas id="barChart"></canvas>
-    </div>
-</td><td>
-    <div class="card">
-      <h2>Amostra B</h2>
-      <canvas id="barChart2"></canvas>
-    </div>
-  </div>
-  </td>
-     <td>
+    </td>
+    </tr>
+    <!-- Variavel resultados -->
+    <!-- {{ resultados}} -->
+    <tr>
+  </td><td>
+    
+     {% for resultado in resultados %}
      <div class="card">
-       <h2>Média Amostras A + B</h2>
-         <canvas id="barChartMedia"></canvas>
-    </div>
- </td>
+       <h2>{{ resultado.amostra.descricao }}</h2>
+        <ul>
+          <li>Impressão Global: {{ resultado.medias['Impressao Global'] | round(2) | string | replace('.', ',')}}</li>
+          <li>Cor: {{ resultado.medias['Cor'] | round(2) | string | replace('.', ',')}}</li>
+          <li>Aroma: {{ resultado.medias['Aroma'] | round(2) | string | replace('.', ',')}}</li>
+          <li>Textura: {{ resultado.medias['Textura'] | round(2) | string | replace('.', ',')}}</li>
+          <li>Sabor: {{ resultado.medias['Sabor'] | round(2) | string | replace('.', ',')}}</li>
+          <li>Intenção de Compra: {{ resultado.medias['Intenção de Compra'] | round(2) | string | replace('.', ',')}}</li>
+       <!-- <canvas id="barChart"></canvas> -->
+     </div>
+    </td><td>
+  {% endfor %}
+    
   </tr>
    </tbody>
 </table>
 
-
-
-  
+ 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
  <script>
-   
+    
     // Bar Chart
     const barCtx = document.getElementById('barChart').getContext('2d');
     new Chart(barCtx, {
       type: 'bar',
       data: {
-        labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
+        labels: ['Impressão Global', 'Cor', 'Aroma', 'Textura','Sabor', 'Intenção de Compra'],
+        // labels: ['Impressão Global'],
         datasets: [
           {
             label: 'Nota Média',
-            data: [8.1, 7.3, 6.5, 5.8],
-            backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
+            data: [resultados[0].medias['Impressão Global'], resultados[0].medias['Cor'], resultados[0].medias['Aroma'], resultados[0].medias['Textura'], resultados[0].medias['Sabor'], resultados[0].medias['Intenção de Compra']],
+            backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111', '#F44336', '#111']
           }
         ]
       }
@@ -125,7 +128,7 @@
         datasets: [
           {
             label: 'Nota Média',
-            data: [8.1, 7.3, 6.5, 5.8],
+            data: [{{8.1, 7.3, 6.5, 5.8}}],
             backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
           }
         ]

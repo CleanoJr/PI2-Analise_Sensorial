@@ -7,6 +7,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Dashboard - Análise Sensorial</title>
   <style>
     body {
@@ -45,9 +46,7 @@
 <link rel="icon" href="../static/assets/icon/logo.ico" type="image/x-icon">
 </head>
 <body>
-  {{ analise = analise|default({}) }}
-  {{ todas_analises = todas_analises|default([]) }}
-  {{ resultados = resultados|default([]) }}
+  
   <header>
     <h1>Dashboard da Análise: {{ analise.nome }}</h1>
   </header>
@@ -70,14 +69,15 @@
           new Chart(ctx{{ loop.index }}, {
             type: 'bar',
             data: {
-              labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
+              labels: ['Impressão Global', 'Sabor', 'Aparência', 'Textura', 'Aroma'],
               datasets: [{
                 label: 'Nota Média',
                 data: [
-                  {{ resultado.medias['Sabor'] }},
-                  {{ resultado.medias['Aparência'] }},
-                  {{ resultado.medias['Textura'] }},
-                  {{ resultado.medias['Aroma'] }}
+                  
+                  {{ resultado.medias['Sabor'] or 0}},
+                  {{ resultado.medias['Aparência'] or 0}},
+                  {{ resultado.medias['Textura'] or 0}},
+                  {{ resultado.medias['Aroma'] or 0}}
                 ],
                 backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
               }]
@@ -87,6 +87,8 @@
       </div>
     {% endfor %}
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
 

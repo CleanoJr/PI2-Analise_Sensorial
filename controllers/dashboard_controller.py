@@ -50,7 +50,17 @@ def dashboard_analise(analise_id):
             ) if any(a.intencao_compra is not None for a in avaliacoes) else 0,
         }
         resultados.append({'amostra': amostra, 'medias': medias})
-    db.close()
-    return print(f"Resultados: {resultados}")  # Debugging line to check results
 
+    # Somando a quantidade de amostras
+    qtd_amostras = len(amostras)
+    analise.qtd_amostras = qtd_amostras
+
+    #Calculando quantidades de avaliações
+    qtd_avaliacoes = db.query(Avaliacao).filter(Avaliacao.testador_id.in_([a.id for a in amostras])).distinct().count()
+    analise.qtd_avaliacoes = int(qtd_avaliacoes / qtd_amostras if qtd_amostras > 0 else 0)
+
+    db.close()
+    # return print(f"Resultados: {resultados}")  # Debugging line to check results
+
+    return render_template('dashboard.html', analise=analise, resultados=resultados)
     # return render_template('/usuario_aluno/dashboard_.html', analise=analise, resultados=resultados)

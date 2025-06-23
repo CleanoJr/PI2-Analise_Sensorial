@@ -69,6 +69,9 @@
                     <a href="{{ url_for('formulario_analise', id=analise.id, produto=analise.produto, quantidade_amostras=analise.quantidade_amostras) }}" class="btn btn-sm btn-primary" title="Nova avaliação">
                       <i class="fa-regular fa-square-plus"></i>
                     </a>                                   
+                    <a href="{{ url_for('dashboard_analise', analise_id=analise.id, produto=analise.produto, quantidade_amostras=analise.quantidade_amostras) }}" class="btn btn-sm btn-primary" title="Relatório">
+                      <i class="fa-regular fa-file"></i>
+                    </a>                                   
                   </div>
                  
                 </td>
