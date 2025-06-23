@@ -20,10 +20,10 @@ def index():
 def login():
     return render_template('login.html')
 
-@app.route('/protected')
+@app.route('/admin')
 @login_required
-def protected():
-    return render_template('protected.html')
+def admin():
+    return render_template('painel_admin.html')
 
 @app.route('/login_process', methods=['POST'])
 def login_process():
