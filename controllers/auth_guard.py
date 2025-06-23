@@ -1,6 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
 from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Substitua os dados abaixo com as informações do seu banco
+DATABASE_URL = "sqlite:///./analise.db"  # ou use postgresql://usuario:senha@localhost/banco
+
+# Criar o engine
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})  # necessário para SQLite
 
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
