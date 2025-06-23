@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import Flask, render_template, redirect, url_for, session
+from main import app
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta'  # Chave secreta para a sessão
