@@ -32,7 +32,7 @@ def login_process():
     password = request.form['password']
     if username == "user" and password == "password":
         session['logged_in'] = True
-        return redirect(url_for('protected'))
+        return redirect(url_for('admin'))
     else:
          return "Credenciais inválidas"
 
