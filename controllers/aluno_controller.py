@@ -38,7 +38,24 @@ def aluno():
 
 @app.route("/aluno/dashboard", methods=['GET'])
 def aluno_dashboard():
-    return render_template("/usuario_aluno/dashboard.html")
+    db = SessionLocal()
+    try:
+        analises = (
+            db.query(Analise)
+            .join(Analise.amostras)
+            .options(joinedload(Analise.responsavel), joinedload(Analise.amostras))
+            .group_by(Analise.id)
+            .order_by(desc(Analise.id))
+            .all()
+        )
+
+        # Adiciona quantidade_amostras em cada instância
+        for analise in analises:
+            analise.quantidade_amostras = len(analise.amostras)
+        return render_template("/usuario_aluno/dashboard.html", analises=analises)
+    finally:
+        db.close()
+   
 
 @app.route("/aluno/analise", methods=['GET'])
 def aluno_analise():
