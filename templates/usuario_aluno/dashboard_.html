@@ -1,0 +1,93 @@
+{% extends '/usuario_aluno/menu_user_aluno.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Análise Sensorial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+<link rel="icon" href="../static/assets/icon/logo.ico" type="image/x-icon">
+</head>
+<body>
+  {{ analise = analise|default({}) }}
+  {{ todas_analises = todas_analises|default([]) }}
+  {{ resultados = resultados|default([]) }}
+  <header>
+    <h1>Dashboard da Análise: {{ analise.nome }}</h1>
+  </header>
+
+  <!-- <form method="get" action="/dashboard">
+    <select name="analise_id" onchange="this.form.submit()">
+      {% for a in todas_analises %}
+        <option value="{{ a.id }}" {% if a.id == analise.id %}selected{% endif %}>{{ a.nome }}</option>
+      {% endfor %}
+    </select>
+  </form> -->
+
+  <div class="container">
+    {% for resultado in resultados %}
+      <div class="card">
+        <h2>{{ resultado.amostra.descricao }}</h2>
+        <canvas id="barChart{{ loop.index }}"></canvas>
+        <script>
+          const ctx{{ loop.index }} = document.getElementById('barChart{{ loop.index }}').getContext('2d');
+          new Chart(ctx{{ loop.index }}, {
+            type: 'bar',
+            data: {
+              labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
+              datasets: [{
+                label: 'Nota Média',
+                data: [
+                  {{ resultado.medias['Sabor'] }},
+                  {{ resultado.medias['Aparência'] }},
+                  {{ resultado.medias['Textura'] }},
+                  {{ resultado.medias['Aroma'] }}
+                ],
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
+              }]
+            }
+          });
+        </script>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
+
+{% endblock %}

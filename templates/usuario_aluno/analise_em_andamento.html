@@ -57,7 +57,7 @@
             <tbody>
               {% for analise in analises %}
               <tr id="analise-{{ analise.id }}">
-                <td>{{ loop.index }}</td>
+                <td>{{ analise.id }}</td>
                 <td>{{ analise.produto }}</td>
                 <td>{{ analise.status }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</td>

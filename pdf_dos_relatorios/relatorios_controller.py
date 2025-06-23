@@ -1,4 +1,5 @@
-from flask import Flask, make_response
+from flask import Flask, make_response, render_template
+from flask import request, redirect, url_for
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
@@ -127,4 +128,11 @@ def gerar_pdf_distribuicao_avaliacao(analise_id):
     return response 
     
 
-  
+@app.route("/relatorio", methods=['GET'])
+def gerar_pdf_relatorio():
+    return "Relatório top demais"
+
+
+@app.route("/dashboard", methods=['GET'])
+def dashboard():
+    return render_template("/dashboard.html")

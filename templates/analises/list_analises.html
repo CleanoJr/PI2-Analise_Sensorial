@@ -107,7 +107,11 @@
                 <td class="d-none d-md-table-cell">{{ analise.teste }}</td>
                 <td class="actions">
                   <div class="d-flex justify-content-center gap-1">
-                     <a href="{{ url_for('visualizar_distribuicao_avaliacoes', id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Distribuição das Amostras">
+                    <a href="{{ url_for('visualizar_distribuicao_avaliacoes', id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Distribuição das Amostras">
+                    <i class="fa-regular fa-file"></i>
+                    </a>
+
+                    <a href="{{ url_for('gerar_pdf_relatorio', id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Gerar relatório">
                     <i class="fa-regular fa-file"></i>
                     </a>
 
