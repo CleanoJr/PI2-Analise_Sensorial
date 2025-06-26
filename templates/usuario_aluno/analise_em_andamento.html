@@ -63,10 +63,10 @@
                 <td class="d-none d-md-table-cell">{{ analise.responsavel.nome if analise.responsavel else 'Nenhum' }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.data }}</td>
                 <td class="d-none d-md-table-cell">{{ analise.teste }}</td>
-                <td class="d-none d-md-table-cell">58</td>
+                <td class="d-none d-md-table-cell">{{ analise.quantidade_avaliacoes }}</td>
                 <td class="actions">
                   <div class="d-flex justify-content-center gap-1">
-                    <a href="{{ url_for('formulario_analise', id=analise.id, produto=analise.produto, quantidade_amostras=analise.quantidade_amostras) }}" class="btn btn-sm btn-primary" title="Nova avaliação">
+                    <a href="{{ url_for('formulario_analise', id=analise.id, produto=analise.produto, quantidade_amostras=analise.quantidade_amostras) }}" class="btn btn-sm btn-primary" title="Nova avaliação" target="_blank">
                       <i class="fa-regular fa-square-plus"></i>
                     </a>                                   
                   </div>
