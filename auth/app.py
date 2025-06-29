@@ -41,7 +41,7 @@ def login():
                 return redirect(url_for('painel_admin'))
             else:
                 flash("Invalid password...")
-                return render_template('auth/login.html')
+                return render_template('templates/login.html')
         else:
             flash("User not found...")
             return render_template('templates/login.html')
