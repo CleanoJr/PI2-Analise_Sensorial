@@ -54,7 +54,7 @@ def salvar_avaliacoes(id):
             ).first()
 
             if not avaliacao:
-                flash(f"Avaliação com número {numero_amostra} não encontrada. Nenhum dado foi salvo.", "error")
+                flash(f"Amostra com número {numero_amostra} não encontrada. Nenhum dado foi salvo.", "error")
                 return redirect(url_for('formulario_analise', id=id))
             
             amostras_validas.append((i, avaliacao))
@@ -84,12 +84,12 @@ def salvar_avaliacoes(id):
             db.add(avaliacao)
 
         db.commit()
-        flash("Avaliações salvas com sucesso!", "success")
+        flash("Avaliação salva com sucesso!", "success")
         return redirect(url_for('formulario_analise', id=id))
 
     except Exception as e:
         db.rollback()
-        flash(f"Erro ao salvar avaliações: {str(e)}", "error")
+        flash(f"Erro ao salvar avaliação: {str(e)}", "error")
         return redirect(url_for('formulario_analise', id=id))
 
     finally:

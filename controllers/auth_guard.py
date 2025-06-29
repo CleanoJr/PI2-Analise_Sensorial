@@ -1,46 +1,45 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
 from functools import wraps
-from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from flask import Flask, render_template, redirect, url_for, session
+from main import app
 
-# Substitua os dados abaixo com as informações do seu banco
-DATABASE_URL = "sqlite:///./analise.db"  # ou use postgresql://usuario:senha@localhost/banco
-
-# Criar o engine
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})  # necessário para SQLite
-
-# Criando a sessão para interagir com o banco de dados
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 app = Flask(__name__)
-app.secret_key = 'segredo'
+app.secret_key = 'sua_chave_secreta'  # Chave secreta para a sessão
 
-def login_obrigatorio(f):
+def login_required(f):
     @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'usuario' in session:
-            return f(*args, **kwargs)
-        flash('Faça login primeiro.', 'danger')
-        return redirect(url_for('login'))
-    return wrap
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session or not session['logged_in']:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/')
 def login():
-    if request.method == 'POST' and request.form['senha'] == '123':
-        session['login'] = request.form['login']
-        return redirect(url_for('painel_admin'))
-    flash('Login inválido.', 'danger')
     return render_template('login.html')
 
-@app.route('/admin')
-@login_obrigatorio
-def admin():
-    return render_template('painel_admin.html', login=session['login'])
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/dashboard')
+@login_required
+def dasbboard():
+    return render_template('painel_admin.html')
+
+@app.route('/login_process', methods=['POST'])
+def login_process():
+    #Simulação de autenticação
+    username = request.form['username']
+    password = request.form['password']
+    if username == "user" and password == "password":
+        session['logged_in'] = True
+        return redirect(url_for('dashboard'))
+    else:
+         return "Credenciais inválidas"
 
 @app.route('/logout')
 def logout():
-    session.pop('login', None)
+    session.pop('logged_in', None)
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
