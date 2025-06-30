@@ -6,6 +6,24 @@ total_por_avaliador = [21, 25, 23, 27, 27, 26, 24, 24, 23, 24, 27, 14, 27, 25, 1
 total_notas = sum(total_por_avaliador)
 notas_individuais = [9,7,5,9,8,8,8,8,7,9,9,9,9,9,9,8,9,9,9,9,6,8,8,8,8,7,8,9,7,8,9,9,9,6,5,3,9,9,9,9,7,9,6,6,3,7,9,5,7,9,5,7,7,8,9,9,9,9,9,9,9,9,9,9,9,9,9,8,8,9,3,6,9,8,8,8,8,9,9,9,7,8,6,7,8,7,7,7,7,4,8,9,7,8,8,9,9,7,2,9,9,9,7,7,6,8,9,9,9,9,9,9,8,9,9,9,9,9,8,8,6,6,6,9,9,9,8,8,8,8,8,8,7,6,8,9,7,8,7,6,8,7,7,5,9,5,5,8,8,8,9,9,9,9,9,9,9,9,9,6,5,6,9,5,2,9,8,8,8,8,9,6,7,4,7,2,4,8,5,7]
 
+
+def calc_F_tabelado_5(quad_medio_variacao, quad_medio_residuo):
+    # Tabela F simplificada para fins de exemplo
+    f_tabela = {
+        (1, 30): 4.17,
+        (2, 30): 3.32,
+        (3, 30): 2.98,
+        (4, 30): 2.75,
+        (5, 30): 2.61,
+        (6, 30): 2.53,
+        (7, 30): 2.47,
+        (8, 30): 2.43,
+        (9, 30): 2.40,
+        (10, 30): 2.38,
+    }
+    return f_tabela.get((gl1, gl2), None)
+
+
 def calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais):
     # Fator de correção
     def fator_correcao():
