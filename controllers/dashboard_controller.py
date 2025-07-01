@@ -18,6 +18,10 @@ def dashboard_analise(analise_id):
     db = SessionLocal()
     analise = db.query(Analise).filter_by(id=analise_id).first()
     amostras = db.query(Amostra).filter_by(analise_id=analise_id).all()
+    # avaliacoes = db.query(Avaliacao).filter(Avaliacao.amostra_id.in_([a.id for a in amostras])).all()
+    if not analise:
+        return "Análise não encontrada", 404
+    
     # Exemplo: buscar médias das avaliações por atributo e amostra
     resultados = []
     for amostra in amostras:

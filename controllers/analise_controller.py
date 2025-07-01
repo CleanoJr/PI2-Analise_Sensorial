@@ -164,6 +164,14 @@ def excluir_analise(id):
         flash("Análise não encontrada!", "error")
         return redirect(url_for('lista_analises'))
 
+    # Excluir avaliações e amostras relacionadas
+    amostras = db.query(Amostra).filter_by(analise_id=id).all()
+    for amostra in amostras:
+        avaliacoes = db.query(Avaliacao).filter_by(amostra_id=amostra.id).all()
+        for avaliacao in avaliacoes:
+            db.delete(avaliacao)
+        db.delete(amostra)
+
     db.delete(analise)
     db.commit()
     db.close()

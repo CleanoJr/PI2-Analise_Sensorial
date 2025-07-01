@@ -3,7 +3,8 @@ from sqlalchemy.orm import declarative_base
 
 
 # URL de conexão com o banco de dados MySQL no XAMPP
-DATABASE_URL = "mysql+pymysql://root:@localhost/analise_db"
+# DATABASE_URL = "mysql+pymysql://root:@localhost/analise_db"
+DATABASE_URL = "sqlite:///analise_db.db"
 
 
 # Conexão com o banco de dados MySQL usando SQLAlchemy
