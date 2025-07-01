@@ -24,8 +24,11 @@
 
       <div class="container-fluid">
         <header>
-          <h1>Usuários cadastrados</h1>
+          <h1>Usuários</h1>
         </header>
+        
+        <a href="{{ url_for('cad_inserir') }}" class="btn btn-success mb-3">Novo Usuário</a>
+
         <div class="table-responsive custom-table">
           <table class="table table-bordered table-hover align-middle text-center custom-table">
             <thead class="table-success">
