@@ -20,7 +20,7 @@ def admin():
     db = SessionLocal()
     usuarioLogado = db.query(Usuario).filter(Usuario.login==login,Usuario.senha == senha,Usuario.ativo == 'Ativo').first()
     if (usuarioLogado):
-      if (usuarioLogado.tipo == 'Professor'):
+      if (usuarioLogado.tipo == 'professor'):
          return render_template("/professor/painel_admin.html") 
       else:
          return render_template("/usuario_aluno/dashboard.html") 
