@@ -77,10 +77,11 @@
       <div class="mb-3">
         <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required />
       </div>
-      {% if current_user.is_authenticated %}
+      
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>  
   </div> 
+  {% if current_user.is_authenticated %}
   {% else %}
       <div>
         <h1>Visitante</h1>
