@@ -81,9 +81,9 @@
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>  
   </div> 
-  {% if login.is_authenticated %}
+  {% if login.html_authenticated %}
     <div>
-      <h1>{{ login.name }}</h1>
+      <h1>{{ login.html }}</h1>
       <p> Logado! </p>
   {% else %}
       <div>
