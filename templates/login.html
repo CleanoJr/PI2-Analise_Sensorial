@@ -60,7 +60,7 @@
 </head>
 <body>
   <div class="login-container">
-    
+    {% if current_user.is_authenticated %}
     <h2 class="login-title">Login</h2>
     {% with mensagens = get_flashed_messages(with_categories=true) %}
   {% if mensagens %}
@@ -76,14 +76,14 @@
       <div class="mb-3">
         <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required />
       </div>
-      {% if current_user.is_authenticated %}
+      
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
-    </form>
-      {% else %}
+    </form>  
+  </div> 
+  {% else %}
       <div>
         <h1>Visitante</h1>
         <p> Voçê não está logado! </p>
       </div>
-  </div>
 </body>
 </html>
