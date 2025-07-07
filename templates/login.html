@@ -60,6 +60,7 @@
 </head>
 <body>
   <div class="login-container">
+    
     <h2 class="login-title">Login</h2>
     {% with mensagens = get_flashed_messages(with_categories=true) %}
   {% if mensagens %}
@@ -67,7 +68,7 @@
       <div class="alert alert-{{ categoria }}">{{ mensagem }}</div>
     {% endfor %}
   {% endif %}
-{% endwith %}
+{% endwith %} 
     <form action="{{ url_for('admin')}}" method="POST">
       <div class="mb-3">
         <input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required />
@@ -75,8 +76,14 @@
       <div class="mb-3">
         <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required />
       </div>
+      {% if current_user.is_authenticated %}
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>
+      {% else %}
+      <div>
+        <h1>Visitante</h1>
+        <p> Voçê não está logado! </p>
+      </div>
   </div>
 </body>
 </html>
