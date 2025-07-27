@@ -10,10 +10,6 @@ from main import app
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Rota para exibir o termo
-#@app.route("/termo", methods=['GET'])
-#def termo():
-#    return render_template("/avaliador/termo.html")  # arquivo HTML com o termo
 
 # Rota para exibir o formulário sensorial
 @app.route('/avaliacao/<int:id>', methods=['GET'])
@@ -36,6 +32,7 @@ def formulario_analise(id):
     finally:
         db.close()
 
+
 @app.route('/avaliacao/<int:id>', methods=['POST'])
 def salvar_avaliacoes(id):
     db = SessionLocal()
@@ -43,20 +40,26 @@ def salvar_avaliacoes(id):
         # 1. Verificar se todas as amostras existem antes de salvar
         i = 1
         amostras_validas = []
+
         while True:
             numero_amostra = request.form.get(f"amostra_{i}")
             if not numero_amostra:
                 break
 
-            avaliacao = db.query(Avaliacao).join(Amostra).filter(
-                Avaliacao.numero == int(numero_amostra),
-                Amostra.analise_id == id
-            ).first()
+            avaliacao = (
+                db.query(Avaliacao)
+                .join(Amostra)
+                .filter(
+                    Avaliacao.numero == int(numero_amostra),
+                    Amostra.analise_id == id
+                )
+                .first()
+            )
 
             if not avaliacao:
                 flash(f"Amostra com número {numero_amostra} não encontrada. Nenhum dado foi salvo.", "error")
                 return redirect(url_for('formulario_analise', id=id))
-            
+
             amostras_validas.append((i, avaliacao))
             i += 1
 
@@ -71,7 +74,7 @@ def salvar_avaliacoes(id):
         db.commit()
         db.refresh(testador)
 
-        # 3. Atualizar as avaliações
+        # 3. Atualizar as avaliações com dados do form
         for i, avaliacao in amostras_validas:
             avaliacao.testador_id = testador.id
             avaliacao.impressao_global = request.form.get(f"impressao_global_{i}")

@@ -5,21 +5,20 @@ from models.analise_model import *
 from models.amostra_model import *
 from models.avaliacao_modal import *
 from models.conexao import *
-from sqlalchemy.orm import sessionmaker  # Importação da sessionmaker
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import sessionmaker, joinedload
 from collections import defaultdict
 
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Rota para listar todas as análises
+# Lista análises em andamento com suas amostras e quantidade de avaliações feitas
 @app.route("/aluno/analise/andamento", methods=['GET'])
 def lista_analises_andamento():
     db = SessionLocal()
     try:
         analises = (
             db.query(Analise)
-            .join(Analise.amostras)  # Garante que tenha pelo menos uma amostra vinculada
+            .join(Analise.amostras)
             .filter(Analise.status == 'Em andamento')
             .options(joinedload(Analise.responsavel), joinedload(Analise.amostras))
             .order_by(desc(Analise.id))
@@ -44,10 +43,12 @@ def lista_analises_andamento():
         db.close()
 
 
+# Página inicial do aluno
 @app.route("/aluno", methods=['GET'])
 def aluno():
     return render_template("/aluno/painel_aluno.html")
 
+# Dashboard do aluno com lista de análises
 @app.route("/aluno/dashboard", methods=['GET'])
 def aluno_dashboard():
     db = SessionLocal()
@@ -61,18 +62,18 @@ def aluno_dashboard():
             .all()
         )
 
-        # Adiciona quantidade_amostras em cada instância
         for analise in analises:
             analise.quantidade_amostras = len(analise.amostras)
         return render_template("/usuario_aluno/dashboard.html", analises=analises)
     finally:
         db.close()
-   
 
+# Rota simples para tela de análise do aluno
 @app.route("/aluno/analise", methods=['GET'])
 def aluno_analise():
     return render_template("/usuario_aluno/analise.html")
 
+# Rota de teste que aponta para dashboard
 @app.route("/teste", methods=['GET'])
 def teste():
     return render_template("/usuario_aluno/dashboard.html")
