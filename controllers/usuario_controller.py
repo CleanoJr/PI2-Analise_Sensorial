@@ -9,30 +9,40 @@ import re
 # Criando a sessão para interagir com o banco de dados
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 @app.route("/", methods=['GET'])
 def login():
     return render_template("/login.html")
+
 
 @app.route("/admin", methods=['POST'])
 def admin():
     login = request.form['username']
     senha = request.form['password']
     db = SessionLocal()
-    usuarioLogado = db.query(Usuario).filter(Usuario.login==login,Usuario.senha == senha,Usuario.ativo == 'Ativo').first()
-    if (usuarioLogado):
-      if (usuarioLogado.tipo == 'professor'):
-         return render_template("/professor/painel_admin.html") 
-      else:
-         return render_template("/usuario_aluno/dashboard.html") 
-    flash('Login ou senha invalido')
-    return redirect("/")  
+    usuarioLogado = db.query(Usuario).filter(
+        Usuario.login == login,
+        Usuario.senha == senha,
+        Usuario.ativo == 'Ativo'
+    ).first()
 
-# Rota para exibir o formulário
+    if usuarioLogado:
+        if usuarioLogado.tipo == 'professor':
+            return render_template("/professor/painel_admin.html")
+        else:
+            return render_template("/usuario_aluno/dashboard.html")
+
+    flash('Login ou senha inválido')
+    return redirect("/")
+
+
+# Rota para exibir o formulário de cadastro
 @app.route("/usuario/cadastro/inserir", methods=['GET'])
 def cad_inserir():
     return render_template("/cadastro/aluno_professor.html")
 
-# Rota para processar o formulário
+
+# Rota para processar o formulário de cadastro
 @app.route("/usuario/cadastro/inserir/create", methods=['POST'])
 def create():
     if request.method == 'POST':
@@ -45,23 +55,20 @@ def create():
         senha = request.form['senha']
         tipo = request.form['tipo']
 
+        # Validação do telefone (somente números com 10 ou 11 dígitos)
+        if not re.match(r'^\d{10,11}$', telefone):
+            flash("Telefone inválido. Use apenas números com DDD (10 ou 11 dígitos).")
+            return redirect(url_for('cad_inserir'))
 
-        # Validação do telefone
-    if not re.match(r'^\d{10,11}$', telefone):
-        flash("Telefone inválido. Use apenas números com DDD (10 ou 11 dígitos).")
-        return redirect(url_for('cad_inserir'))
+        # Convertendo a data do formato string para tipo Date
+        try:
+            data_nascimento = datetime.strptime(data_str, '%Y-%m-%d').date()
+        except ValueError:
+            flash("Data de nascimento inválida.")
+            return redirect(url_for('cad_inserir'))
 
-    # Convertendo a data do formato string para tipo Date
-    try:
-        data_nascimento = datetime.strptime(data_str, '%Y-%m-%d').date()
-    except ValueError:
-        flash("Data de nascimento inválida.")
-        return redirect(url_for('cad_inserir'))
-
-
-
-     # Cria um novo cadastro
-    new_usuario = Usuario(
+        # Cria um novo cadastro
+        new_usuario = Usuario(
             nome=nome,
             email=email,
             telefone=telefone,
@@ -70,30 +77,29 @@ def create():
             tipo=tipo,
             data_nascimento=data_nascimento,
             ativo='Ativo'  # Definindo o status como ativo por padrão
-            )
+        )
 
         # Cria uma nova sessão para o banco de dados
-    db = SessionLocal()
+        db = SessionLocal()
 
         # Adiciona o novo cadastro ao banco de dados
-    db.add(new_usuario)
-    db.commit()
+        db.add(new_usuario)
+        db.commit()
+        db.close()
 
         # Redireciona para a página de lista de cadastros
-    flash("Usuario cadastrado com sucesso!", "success")
-    return redirect(url_for('lista'))
+        flash("Usuário cadastrado com sucesso!", "success")
+        return redirect(url_for('lista'))
+
 
 # Rota para exibir a lista de cadastros
 @app.route("/usuario/cadastro/inserir/list")
 def lista():
-    # Cria uma nova sessão para o banco de dados
     db = SessionLocal()
-
-    # Consulta todos os cadastros no banco de dados
     cadastros = db.query(Usuario).all()
-
-    # Renderiza o template com a lista de cadastros
+    db.close()
     return render_template("/usuario/list_usuario.html", cadastros=cadastros)
+
 
 # Rota para exibir o formulário de edição
 @app.route("/usuario/cadastro/inserir/editar/<int:id>", methods=["GET"])
@@ -102,6 +108,7 @@ def editar(id):
     cadastro = db.query(Usuario).filter(Usuario.id == id).first()
     db.close()
     return render_template("usuario/edit_usuario.html", cadastro=cadastro)
+
 
 # Rota para processar a atualização
 @app.route("/usuario/cadastro/inserir/update/<int:id>", methods=["POST"])
@@ -113,11 +120,12 @@ def update(id):
         cadastro.nome = request.form['nome']
         cadastro.email = request.form['email']
 
-    # Validação de telefone( somente números com 10 ou 11 dígitos)
+        # Validação do telefone (somente números com 10 ou 11 dígitos)
         telefone = request.form['telefone']
         if not re.match(r'^\d{10,11}$', telefone):
-             flash("Telefone inválido.")
-             return redirect(url_for('editar', id=cadastro.id))
+            flash("Telefone inválido.")
+            db.close()
+            return redirect(url_for('editar', id=cadastro.id))
 
         cadastro.telefone = telefone
         cadastro.data_nascimento = datetime.strptime(request.form['data_nascimento'], '%Y-%m-%d').date()
@@ -129,25 +137,21 @@ def update(id):
         db.commit()
     db.close()
 
-    flash("Usuario atualizado com sucesso!", "success")
+    flash("Usuário atualizado com sucesso!", "success")
     return redirect(url_for('lista'))
+
 
 # Rota para excluir um cadastro
 @app.route("/cadastro/excluir/<int:id>", methods=["GET"])
 def excluir(id):
-    # Cria uma nova sessão para o banco de dados
     db = SessionLocal()
-
-    # Encontra o cadastro que corresponde ao ID
     usuario = db.query(Usuario).filter(Usuario.id == id).first()
 
     if usuario:
-        # Exclui o cadastro encontrado
         db.delete(usuario)
         db.commit()
 
     db.close()
 
-    # Redireciona para a página de lista de cadastros após a exclusão
-    flash("Usuario excluído com sucesso!", "success")
+    flash("Usuário excluído com sucesso!", "success")
     return redirect(url_for('lista'))
