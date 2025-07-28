@@ -11,6 +11,9 @@ from models.ModelUser import ModelUser
 # Entities:
 from models.entities.User import User
 
+# controllers
+from controllers import avaliacao_controller
+
 app = Flask(__name__)
 
 csrf = CSRFProtect()

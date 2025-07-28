@@ -1,5 +1,6 @@
 from sqlalchemy import desc
 from main import app
+from flask import redirect
 from flask import request, render_template, redirect, url_for, flash, session
 from models.analise_model import *
 from models.amostra_model import *
@@ -50,23 +51,25 @@ def aluno():
 
 @app.route("/aluno/dashboard", methods=['GET'])
 def aluno_dashboard():
-    db = SessionLocal()
-    try:
-        analises = (
-            db.query(Analise)
-            .join(Analise.amostras)
-            .options(joinedload(Analise.responsavel), joinedload(Analise.amostras))
-            .group_by(Analise.id)
-            .order_by(desc(Analise.id))
-            .all()
-        )
+     return redirect(url_for('dashboard'))
+    
+    #db = SessionLocal()
+    #try:
+        #analises = (
+            #db.query(Analise)
+            #.join(Analise.amostras)
+            #.options(joinedload(Analise.responsavel), #joinedload(Analise.amostras))
+            #.group_by(Analise.id)
+            #.order_by(desc(Analise.id))
+            #.all()
+        #)
 
         # Adiciona quantidade_amostras em cada instância
-        for analise in analises:
-            analise.quantidade_amostras = len(analise.amostras)
-        return render_template("/usuario_aluno/dashboard.html", analises=analises)
-    finally:
-        db.close()
+        #for analise in analises:
+            #analise.quantidade_amostras = len(analise.amostras)
+        #return render_template("/usuario_aluno/dashboard_atualizado.html", analises=analises)
+    #finally:
+        #db.close()
    
 
 @app.route("/aluno/analise", methods=['GET'])
@@ -75,4 +78,4 @@ def aluno_analise():
 
 @app.route("/teste", methods=['GET'])
 def teste():
-    return render_template("/usuario_aluno/dashboard.html")
+    return render_template("/usuario_aluno/dashboard_atualizado.html")
