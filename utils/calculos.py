@@ -1,3 +1,5 @@
+import math
+
 qtd_avaliadores = 60 # Número de avaliadores
 qtd_amostras = 3 # Número de amostras
 total_amostras = qtd_amostras * qtd_avaliadores # Total de amostras avaliadas
@@ -450,10 +452,30 @@ def calc_F_tabelado_5(quad_medio_residuo, quad_medio_variacao):
     return f_tabela.get((gl1, gl2), None)
 
 
-def teste_dunnet():
-    # Implementação do teste de Dunnett
-    # Este é um exemplo simplificado e não inclui todos os detalhes do teste de Dunnett
+# Implementação do teste de Dunnett
+def teste_dunnet(qtd_amostras, glResiduo):
+   
+    # Grau de Liberdade Residuo
+    if glResiduo > 120:
+        gl1 = 130
+    elif glResiduo > 60:
+        gl1 = 120
+    elif glResiduo > 40:
+        gl1 = 60
+    elif glResiduo > 30:
+        gl1 = 40
+    elif glResiduo > 24:
+        gl1 = 30
+    elif glResiduo > 20:
+        gl1 = 24
+    else:
+        gl1 = glResiduo
 
+    # numero de amostras
+    if qtd_amostras > 10:
+        gl2 = 10
+    else:
+        gl2 = qtd_amostras
 
     d_tabela = {
         (5, 2): 2.02,
@@ -656,7 +678,18 @@ def teste_dunnet():
         (130, 10): 2.42
     }
     
-    return "Teste de Dunnett não implementado"
+    return d_tabela.get((gl1, gl2), None)
 
+
+# Função para calcular o MDS (Mínimo Diferencial Significativo)
+def calc_mds(qtd_amostras, glResiduo, qm_residuo, qtd_avaliadores):
+    
+    # calcula o valor de d usando o teste de Dunnett
+    d = teste_dunnet(qtd_amostras, glResiduo)
+
+    # Calcula o MDS (Mínimo Diferencial Significativo)
+    mds = d*math.sqrt(((2*qm_residuo)/qtd_avaliadores))
+    
+    return round(mds, 2)
 
 # print(calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais))
