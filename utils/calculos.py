@@ -20,7 +20,7 @@ def testes (qtd_amostras, qtd_avaliadores, total_notas, total_amostras, total_po
 
     # Calcula Anova
     anova = calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais)
-
+    
     if not anova:
         return 
     return None
@@ -34,7 +34,6 @@ def testes (qtd_amostras, qtd_avaliadores, total_notas, total_amostras, total_po
 # total_por_avaliador: lista com o total de notas dadas por cada avaliador
 # notas_individuais: lista com as notas individuais dadas por cada avaliador
 # Retorna uma string com os resultados do cálculo de ANOVA
-
 def calc_anova(qtd_amostras, qtd_avaliadores, total_notas, total_por_avaliador, notas_individuais):
    
     # Fator de correção
@@ -693,3 +692,4 @@ def calc_mds(qtd_amostras, glResiduo, qm_residuo, qtd_avaliadores):
     return round(mds, 2)
 
 # print(calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais))
+print(calc_anova(qtd_amostras, qtd_avaliadores, total_notas, total_por_avaliador, notas_individuais))
