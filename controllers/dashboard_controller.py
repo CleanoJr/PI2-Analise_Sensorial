@@ -18,6 +18,7 @@ def dashboard_analise(analise_id):
     
     analise = db.query(Analise).filter_by(id=analise_id).first()
     amostras = db.query(Amostra).filter_by(analise_id=analise_id).all()
+    avaliadores = db.query(Avaliacao.testador_id).filter(Avaliacao.amostra_id == analise_id).distinct().count()
     
     # avaliacoes = db.query(Avaliacao).filter(Avaliacao.amostra_id.in_([a.id for a in amostras])).all()
     
@@ -123,4 +124,4 @@ def dashboard_analise(analise_id):
     # return print(f"Resultados: {resultados}")  # Debugging line to check results
 
     return render_template('dashboard.html', analise=analise, resultados=resultados, avaliadores=avaliadores, qtd_amostras=qtd_amostras, anova=anova)
-    # return render_template('/usuario_aluno/dashboard_.html', analise=analise, resultados=resultados)
+    # return render_template('dashboard.html', analise=analise, resultados=resultados)

@@ -75,19 +75,13 @@
               </ul>
             </div>
           </td>
-        </tr>
-        <!-- Variavel resultados -->
-        {{ resultados}}
-        <tr>
-          </td>
           <td>
 
             {% for resultado in resultados %}
             <div class="card">
               <h2>{{ resultado.amostra.descricao }}</h2>
               <ul>
-                <li>Impressão Global: {{ resultado.medias['Impressao Global'] | round(2) | string | replace('.', ',')}}
-                </li>
+                <li>Impressão Global: {{ resultado.medias['Impressao Global'] | round(2) | string | replace('.', ',')}}</li>
                 <li>Cor: {{ resultado.medias['Cor'] | round(2) | string | replace('.', ',')}}</li>
                 <li>Aroma: {{ resultado.medias['Aroma'] | round(2) | string | replace('.', ',')}}</li>
                 <li>Textura: {{ resultado.medias['Textura'] | round(2) | string | replace('.', ',')}}</li>
@@ -132,10 +126,12 @@
           <td></td>
           <td></td>
           <td></td>
+          <td></td>
         </tr>
         <tr>
           <th>Resíduo</th>
           <td>{{ ((analise.qtd_amostras * avaliadores)-1) - (avaliadores - 1) - (analise.qtd_amostras - 1) }}</td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
