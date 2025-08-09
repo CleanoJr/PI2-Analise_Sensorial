@@ -77,9 +77,12 @@
       <div class="mb-3">
         <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required />
       </div>
-            <div class="mb-3">
-        <input type="tipo" id="tipo" name="tipo" class="form-control" placeholder="Tipo" required />
-      </div>
+        <div class="col-md-6">
+          <label for="tipo">Tipo:</label>
+            <select name="tipo" required>
+              <option value="aluno" {% if cadastro.tipo=="aluno" %}selected{% endif %}>Aluno</option>
+              <option value="professor" {% if cadastro.tipo=="professor" %}selected{% endif %}>Professor</option>
+            </select>
 
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
     </form>  
