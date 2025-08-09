@@ -69,6 +69,9 @@
     {% endfor %}
   {% endif %}
 {% endwith %} 
+{% for usuario in usuarios %}
+  <li>{{ usuario.nome }} - {{ usuario.email }}</li>
+{% endfor %}
 
     <form action="{{ url_for('admin')}}" method="POST">
       <div class="mb-3">
@@ -84,7 +87,6 @@
       <option value="professor" {% if cadastro.tipo == "professor" %}selected{% endif %}>Professor</option>
     </select>
   </div>
-          
             
 
       <button type="submit" class="btn btn-ifce w-100">Entrar</button>
