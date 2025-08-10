@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from main import app
 from flask import request, render_template, redirect, url_for, flash
 from models.usuario_model import *
