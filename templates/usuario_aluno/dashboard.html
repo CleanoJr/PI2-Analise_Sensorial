@@ -3,8 +3,6 @@
 {% block content %}
 
 
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -44,93 +42,27 @@
       width: 100% !important;
       height: auto !important;
     }
+
   </style>
 <link rel="icon" href="../static/assets/icon/logo.ico" type="image/x-icon">
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
   <header>
     <h1>Dashboard de Análise Sensorial </h1>
   </header>
+   
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
    {% for analise in analises %}
 
-     
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- 
- <script>
-   
-    // Bar Chart
-    const barCtx = document.getElementById('barChart{{analise.id}}').getContext('2d');
-    new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
-        datasets: [
-          {
-            label: 'Nota Média',
-            data: [8.1, 7.3, 6.5, 5.8],
-            backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
-          }
-        ]
-      }
-    });
-
-     // Bar Chart
-    const barCtx2 = document.getElementById('barChart2{{analise.id}}').getContext('2d');
-    new Chart(barCtx2, {
-      type: 'bar',
-      data: {
-        labels: ['Sabor', 'Aparência', 'Textura', 'Aroma'],
-        datasets: [
-          {
-            label: 'Nota Média',
-            data: [8.1, 7.3, 6.5, 5.8],
-            backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#111']
-          }
-        ]
-      }
-    });
-
-
-    
- 
- 
- </script>
-
-
-  <script type="text/javascript">
-        google.charts.load('current', {'packages': ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                [''
-                  ,'sadf','432'
-                ],
-                [''
-                  ,'lkj','ljk'
-                ],
-            ]);
-
-            var options = {
-                title: '',
-                curveType: 'function',
-                legend: {position: 'bottom'},
-                colors: ['#0000FF', '#FF0000', '#00FF7F', '#FFFF00'],
-                vAxis: {
-                    title: 'teste'
-                }
-            };
-            var chart = new google.visualization.ColumnChart(document.getElementById('{{analise.id}}'));
-            chart.draw(data, options);
-        }
-    </script>
- 
        <div class="container" style="width: 100%;"> 
     <table class="table" >
         <thead>
             <tr>
-          <th scope="col">Dados da análise:{{ analise.produto }}</th>    
+          <th colspan="2" scope="col">Dados da análise:{{ analise.produto }}</th>    
         </tr>
         
       </thead>
@@ -143,36 +75,60 @@
               <li>Testes realizados: 12</li>
             </ul>
           </div>
-        </td><td>
-          <div class="card">
-            <h2>Amostra A</h2>
-            <canvas id="barChart{{analise.id}}"></canvas>
-             <div id="{{analise.id}}" style="width: 100%; height: 100%"></div>
-          </div>
-      </td><td>
-          <div class="card">
-            <h2>Amostra B</h2>
-            <canvas id="barChart2{{analise.id}}"></canvas>
-          </div>
-       
         </td>
+        <!--aqui um grafico para cada amostra-->
+        
+            {% for amostra in analise.amostras %}
+            <td>
+             <div class="card"  >
+                <h2>Amostra {{amostra.descricao}}</h2>
+                  <div id="chat{{amostra.id}}" ></div>
+              </div>
+              </td>
+
+            
+               <script>
+                    google.charts.load('current', {'packages': ['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+                      function drawChart() {     
+                            var data = google.visualization.arrayToDataTable([
+                              ['', 'Impressão Global', 'Cor', 'Aroma', 'Textura','Sabor','Intenção de compra'],
+                            ['', {{ medias_avaliacores[amostra.id]['impressao_global'] }}, 
+                            {{ medias_avaliacores[amostra.id]['cor'] }},
+                            {{ medias_avaliacores[amostra.id]['aroma'] }},
+                            {{ medias_avaliacores[amostra.id]['textura'] }},
+                           {{ medias_avaliacores[amostra.id]['sabor'] }},
+                           {{ medias_avaliacores[amostra.id]['intencao_compra'] }}],
+                              ]);              
+                        var options = {
+                              title: '',
+                              curveType: 'function',
+                              legend: {position: 'bottom'},
+                              colors: ['#0000FF', '#FF0000', '#00FF7F', '#F1FF00', '#F34F00', '#FF4455', '#FFFF11'],
+                              vAxis: {
+                                  title: 'Médias'
+                              }
+                          };    
+                          var chart = new google.visualization.ColumnChart(document.getElementById('chat{{amostra.id}}'));
+                          chart.draw(data, options);            
+                      }                      
+ 
+                </script>
+            {% endfor %}
+      
         </tr>
         </tbody>
       </table>
+       
        </div>
+
    
 
 
-
-
-
+{% endfor %}
 
 </body>
 </html>
-
-{% endfor %}
-
-
 
 
 {% endblock %}
