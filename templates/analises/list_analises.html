@@ -111,8 +111,8 @@
                     <i class="fa-regular fa-file"></i>
                     </a>
 
-                    <a href="{{ url_for('gerar_pdf_relatorio', id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Gerar relatório">
-                    <i class="fa-regular fa-file"></i>
+                    <a href="{{ url_for('dashboard_analise', analise_id=analise.id) }}" target="_blank" class="btn btn-sm btn-success" title="Gerar relatório">
+                    <i class="fa-solid fa-chart-line"></i>
                     </a>
 
                     <a href="{{ url_for('detalhes_analise', id=analise.id) }}"  class="btn btn-sm btn-primary" title="Detalhes">

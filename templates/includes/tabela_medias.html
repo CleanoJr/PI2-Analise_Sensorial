@@ -1,0 +1,27 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Amostra</th>
+      <th>Impressão Global</th>
+      <th>Cor</th>
+      <th>Aroma</th>
+      <th>Textura</th>
+      <th>Sabor</th>
+      <th>Intenção de Compra</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for resultado in resultados %}
+    <tr>
+      <td>{{ resultado.amostra.descricao }}</td>
+      <td>{{ resultado.medias['Impressao Global'] | round(2) }}</td>
+      <td>{{ resultado.medias['Cor'] | round(2) }}</td>
+      <td>{{ resultado.medias['Aroma'] | round(2) }}</td>
+      <td>{{ resultado.medias['Textura'] | round(2) }}</td>
+      <td>{{ resultado.medias['Sabor'] | round(2) }}</td>
+      <td>{{ resultado.medias['Intenção de Compra'] | round(2) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>

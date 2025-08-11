@@ -6,6 +6,7 @@ from models.amostra_model import Amostra
 from models.avaliacao_modal import Avaliacao
 from utils.calculos import testes, calc_anova # Importando a função de cálculos
 from sqlalchemy import select
+from utils.calculos import calc_anova, calc_F_tabelado_5, calc_mds
 from main import app
 
 # Criando a sessão para interagir com o banco de dados
@@ -32,7 +33,7 @@ def dashboard_analise(analise_id):
         
         avaliacoes = db.query(Avaliacao).filter_by(amostra_id=amostra.id).all()
         
-        # Calcule médias conforme seus campos (exemplo fictício)
+        # Calcule médias conforme seus campos
         medias = {
             'Impressao Global': (
                 sum(a.impressao_global for a in avaliacoes if a.impressao_global is not None) /
@@ -105,23 +106,33 @@ def dashboard_analise(analise_id):
     analise.qtd_avaliacoes = int(qtd_avaliacoes / qtd_amostras if qtd_amostras > 0 else 0)
 
 
-    # ----------- CONTINUAR A PARTIR DAQUI ---------------
+    # Dicionário para armazenar resultados de ANOVA por atributo
+    resultados_anova = {}
 
-    def anova(carac: str):
-        
-        # Calculo anova
-        anova = calc_anova(
-            qtd_amostras=analise.quantidade_amostras,  # Quantidade de amostras
-            qtd_avaliadores=analise.quantidade_avaliadores,  # Quantidade de avaliadores
-            total_notas= total_notas[carac],  # Total de amostras
-            total_por_avaliador=total_por_avaliador[carac],  # Total por avaliador
-            notas_individuais=[a.medias for a in resultados]  # Notas individuais
+    # Mapeamento dos nomes exibidos para os nomes dos campos do modelo
+    atributos_map = {
+        'Impressao Global': 'impressao_global',
+        'Cor': 'cor',
+        'Aroma': 'aroma',
+        'Textura': 'textura',
+        'Sabor': 'sabor',
+        'Intenção de Compra': 'intencao_compra',  # sem acento!
+    }
+
+    for atributo in atributos_map.keys():
+        campo = atributos_map[atributo]
+        resultados_anova[atributo] = calc_anova(
+            qtd_amostras=qtd_amostras,
+            qtd_avaliadores=avaliadores,
+            total_notas=total_notas[atributo],
+            total_por_avaliador=[getattr(a, campo) for a in avaliacoes if getattr(a, campo) is not None],
+            notas_individuais=notas_individuais[atributo]
         )
+    
 
-    # -----------------------------------------------------
 
     db.close()
     # return print(f"Resultados: {resultados}")  # Debugging line to check results
 
-    return render_template('dashboard.html', analise=analise, resultados=resultados, avaliadores=avaliadores, qtd_amostras=qtd_amostras, anova=anova)
-    # return render_template('dashboard.html', analise=analise, resultados=resultados)
+    return render_template('dashboard.html', analise=analise, resultados=resultados, avaliadores=avaliadores, qtd_amostras=qtd_amostras, resultados_anova=resultados_anova)
+    # return render_template('dashboard.html', analise=analise, resultados=resultados)  

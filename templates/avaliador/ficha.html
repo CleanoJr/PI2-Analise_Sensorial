@@ -129,9 +129,15 @@
         <label>Nº da Amostra *</label>
         <input type="text" name="amostra_{{ i }}" required>
 
-        {% set campos = ['Impressão Global', 'Cor', 'Aroma', 'Textura', 'Sabor'] %}
+        {% set campos = ['Impressão_Global', 'Cor', 'Aroma', 'Textura', 'Sabor'] %}
         {% for campo in campos %}
-          <label>{{ campo }} *</label>
+
+          {% if campo == 'Impressão Global' %}
+            <label>Impressão Global *</label>
+          {% else %}
+            <label>{{ campo }} *</label>
+          {% endif %}
+          
           <div class="rating-group">
             {% for n in range(1,10) %}
             <label>

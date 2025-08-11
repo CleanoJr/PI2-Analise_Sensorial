@@ -692,4 +692,4 @@ def calc_mds(qtd_amostras, glResiduo, qm_residuo, qtd_avaliadores):
     return round(mds, 2)
 
 # print(calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais))
-print(calc_anova(qtd_amostras, qtd_avaliadores, total_notas, total_por_avaliador, notas_individuais))
+# print(calc_anova(qtd_amostras, qtd_avaliadores, total_notas, total_por_avaliador, notas_individuais))

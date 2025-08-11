@@ -225,6 +225,17 @@ form button:hover {
   background-color: green ;
 }
 
+.tabela-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.tabela-scroll th, .tabela-scroll td {
+  text-align: center;
+  vertical-align: middle;
+  width: 50px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .sidebar {

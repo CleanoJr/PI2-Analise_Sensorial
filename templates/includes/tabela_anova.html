@@ -1,0 +1,46 @@
+<!-- Tabela Anova -->
+    <table class="table">
+      <thead align="center">
+        <tr>
+          <th scope="col" colspan="5">Tabela Anova</th>
+        </tr>
+        <tr>
+          <th scope="col">Causa da Variação</th>
+          <th scope="col">Grau de Liberdade</th>
+          <th scope="col">SQ</th>
+          <th scope="col">Quadrado Médio (QM)</th>
+          <th scope="col">F</th>
+        </tr>
+      </thead>
+      <tbody align="center">
+        <tr>
+          <th>Amostra</th>
+          <td>{{ analise.qtd_amostras - 1 }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Provador</th>
+          <td>{{ avaliadores - 1}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Resíduo</th>
+          <td>{{ ((analise.qtd_amostras * avaliadores)-1) - (avaliadores - 1) - (analise.qtd_amostras - 1) }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <td>{{(analise.qtd_amostras * avaliadores) - 1}}</td>
+          <td>3</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>

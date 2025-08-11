@@ -75,13 +75,17 @@
               </ul>
             </div>
           </td>
-          <td>
 
+        </tr>
+        <tr>
+
+          <td>
             {% for resultado in resultados %}
             <div class="card">
               <h2>{{ resultado.amostra.descricao }}</h2>
               <ul>
-                <li>Impressão Global: {{ resultado.medias['Impressao Global'] | round(2) | string | replace('.', ',')}}</li>
+                <li>Impressão Global: {{ resultado.medias['Impressao Global'] | round(2) | string | replace('.', ',')}}
+                </li>
                 <li>Cor: {{ resultado.medias['Cor'] | round(2) | string | replace('.', ',')}}</li>
                 <li>Aroma: {{ resultado.medias['Aroma'] | round(2) | string | replace('.', ',')}}</li>
                 <li>Textura: {{ resultado.medias['Textura'] | round(2) | string | replace('.', ',')}}</li>
@@ -91,59 +95,34 @@
 
             </div>
           </td>
-          <td>
+        </tr>
+        <td>
+          {% endfor %}
+
+
+
+          </tr>
+          <!-- <tr>
+          
+            {% for atributo, anova in resultados_anova.items() %}
+            <h3>ANOVA para {{ atributo }}</h3>
+            <ul>
+              <li>Fator de Correção: {{ anova.fator_correcao }}</li>
+              <li>Soma dos Quadrados das Amostras: {{ anova.soma_quadrados_amostras }}</li>
+              <li>Soma dos Quadrados dos Avaliadores: {{ anova.soma_quadrados_avaliadores }}</li>
+              <li>Soma dos Quadrados Totais: {{ anova.soma_quadrados_totais }}</li>
+              <li>Soma dos Quadrados do Resíduo: {{ anova.soma_quadrados_residuo }}</li>
+            </ul>
             {% endfor %}
-
-        </tr>
+        </tr> -->
       </tbody>
     </table>
 
-    <!-- Tabela Anova -->
-    <table class="table" >
-      <thead align="center">
-        <tr>
-          <th scope="col" colspan="5">Tabela Anova</th>
-        </tr>
-        <tr>
-          <th scope="col">Causa da Variação</th>
-          <th scope="col">Grau de Liberdade</th>
-          <th scope="col">SQ</th>
-          <th scope="col">Quadrado Médio (QM)</th>
-          <th scope="col">F</th>
-        </tr>
-      </thead>
-      <tbody align="center">
-        <tr>
-          <th>Amostra</th>
-          <td>{{ analise.qtd_amostras - 1 }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>Provador</th>
-          <td>{{ avaliadores - 1}}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>Resíduo</th>
-          <td>{{ ((analise.qtd_amostras * avaliadores)-1) - (avaliadores - 1) - (analise.qtd_amostras - 1) }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>Total</th>
-          <td>{{(analise.qtd_amostras * avaliadores) - 1}}</td>
-          <td>3</td>
-          <td colspan="2"></td>
-        </tr>
-      </tbody>
-    </table>
+
+
+    <div class="tabela-scroll">
+      {% include 'includes/tabela_medias.html' %}
+    </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
