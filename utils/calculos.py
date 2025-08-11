@@ -15,15 +15,12 @@ def testes (qtd_amostras, qtd_avaliadores, total_notas, total_amostras, total_po
         total_amostras <= 0 or not total_por_avaliador or not notas_individuais):
         return None
     
-    # Calcula a média das notas dadas por avaliador
-    media_avaliadores = total_notas / (qtd_avaliadores * qtd_amostras)
-
     # Calcula Anova
     anova = calc_anova(total_notas, total_amostras, qtd_amostras, qtd_avaliadores, total_por_avaliador, notas_individuais)
     
     if not anova:
         return 
-    return None
+    return anova
 
 
 # Função para calcular ANOVA
@@ -64,6 +61,8 @@ def calc_anova(qtd_amostras, qtd_avaliadores, total_notas, total_por_avaliador, 
     # Soma dos quadrados do Resíduo
     def soma_quadrados_residuo():
         return (soma_quadrados_totais() - (soma_quadrados_amostras() + soma_quadrados_avaliadores()))
+
+
 
     return {
         "fator_correcao": round(fator_correcao(), 2),
