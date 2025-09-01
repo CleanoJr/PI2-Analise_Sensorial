@@ -87,33 +87,7 @@
               </td>
 
             
-               <script>
-                    google.charts.load('current', {'packages': ['corechart']});
-                    google.charts.setOnLoadCallback(drawChart);
-                      function drawChart() {     
-                            var data = google.visualization.arrayToDataTable([
-                              ['', 'Impressão Global', 'Cor', 'Aroma', 'Textura','Sabor','Intenção de compra'],
-                            ['', {{ medias_avaliacores[amostra.id]['impressao_global'] }}, 
-                            {{ medias_avaliacores[amostra.id]['cor'] }},
-                            {{ medias_avaliacores[amostra.id]['aroma'] }},
-                            {{ medias_avaliacores[amostra.id]['textura'] }},
-                           {{ medias_avaliacores[amostra.id]['sabor'] }},
-                           {{ medias_avaliacores[amostra.id]['intencao_compra'] }}],
-                              ]);              
-                        var options = {
-                              title: '',
-                              curveType: 'function',
-                              legend: {position: 'bottom'},
-                              colors: ['#0000FF', '#FF0000', '#00FF7F', '#F1FF00', '#F34F00', '#FF4455', '#FFFF11'],
-                              vAxis: {
-                                  title: 'Médias'
-                              }
-                          };    
-                          var chart = new google.visualization.ColumnChart(document.getElementById('chat{{amostra.id}}'));
-                          chart.draw(data, options);            
-                      }                      
- 
-                </script>
+              
             {% endfor %}
       
         </tr>

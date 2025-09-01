@@ -30,7 +30,8 @@ def admin():
         if usuarioLogado.tipo == 'professor':
             return render_template("/professor/painel_admin.html")
         else:
-            return render_template("/usuario_aluno/dashboard.html")
+            return redirect(url_for('aluno_dashboard'))
+           # return render_template("/usuario_aluno/dashboard_atualizado.html")
 
     flash('Login ou senha inválido')
     return redirect("/")
